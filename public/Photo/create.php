@@ -7,37 +7,44 @@ $database = 'PicturMe';
 //On établit la connexion
 $conn = mysqli_connect($servername, $username, $password,$database);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nom = $_POST['nom'];
-    $email = $_POST['email'];
-    $sql = "INSERT INTO client (nom, email) VALUES ('$nom', '$email')";
-    mysqli_query($conn, $sql);
-    if (isset($))
-        if (empty($nom)) {
-            echo "Champ nom n'est pas valide";
-        }
+    $chemin_fichier = $_POST['file'];
+    $resolution = $_POST['resolution'];
+    $format = $_POST['format'];
+    $sql = "INSERT INTO Photo (chemin_fichier, resolution, format) VALUES ('$chemin_fichier','$resolution', '$format') ";
+    if (mysqli_query($conn, $sql)) {
+        echo "Fichier enregistré dans la base de données.";
+    }else{
+    echo "Erreur : " . mysqli_error($conn);
+    }
 }
-
-
-
 mysqli_close($conn);
 ?>
+
+
 <!DOCTYPE html>
+<html lang="fr"> <!-- Ajout de l'attribut de langue -->
 <head>
-    <title> Creation de Client</title>
-    <meta charset="utf-8"></meta>
+    <meta charset="UTF-8"> <!-- Correction de la balise meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Vue responsive -->
+    <title>Photo</title>
 </head>
 <body>
-
-</body>
-<form action="creer.php" method="post">
-    <label for="Nom">Nom</label>
-    <input type="text" id="Nom" name="nom" placeholder="Nom de la personne">
-    <label for="email">email</label>
-    <input type="email" id="email" name="email" placeholder="Email de la personne">
-    <label for="telephone">telephone</label>
-    <input type="tel" id="telephone" name="telephone" placeholder="Telephone du client"
-    <input type="submit" name="S'inscrire" value="créer un client"></input>
-
-
-
+<form action="create.php" method="post" enctype="multipart/form-data"> <!-- Ajout de enctype pour gérer les fichiers -->
+    <div>
+        <label for="file">Téléchargez une image :</label>
+        <input type="file" id="file" name="file" accept=".jpeg, .jpg, .png, .gif" required>
+    </div>
+    <div>
+        <label for="resolution">Résolution :</label>
+        <input type="text" id="resolution" name="resolution" placeholder="1920x1080">
+    </div>
+    <div>
+        <label for="format">Format :</label>
+        <input type="text" id="format" name="format" placeholder="Format de la photo (ex : JPEG)">
+    </div>
+    <div>
+        <button type="submit" name="valider" value="Envoyer">Soumettre</button>
+    </div>
 </form>
+</body>
+</html>

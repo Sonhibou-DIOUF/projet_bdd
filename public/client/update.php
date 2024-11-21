@@ -9,7 +9,7 @@ $conn = mysqli_connect($servername, $username, $password,$database);
 if (!$conn) {
     die("Échec de la connexion : " . mysqli_connect_error());
 }
-$query = "UPDATE Photo SET nom = 'NAFI' WHERE id_client = 284";
+$query = "UPDATE Client SET nom = 'NAFI' WHERE id_client = 284";
 if ($mysqli_query = mysqli_query($conn, $query)){
     echo 'reussi';
 }else {

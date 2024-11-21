@@ -81,14 +81,36 @@ if ($mysqli_query = mysqli_query($conn, $query)){
 mysqli_close($conn);
 ?>
 
-
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <title>Cours PHP / MySQL</title>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <title>PicturMe</title>
+    <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
-<h1>Bases de données MySQL</h1>
+<section id="container">
+    <header>
+        <div class="logo">
+            <p>PicturMe</p>
+        </div>
+        <div>
+            <ul class="menu">
+                <li><a href="#">Acceuil</a></li>
+                <li><a href="#">A propos</a></li>
+                <li><a href="#">Tarifs</a></li>
+                <li><a href="#">Nous Contacter</a></li>
+            </ul>
+
+        </div>
+    </header>
+
+</section>
+<section id="conctact"></section>
+<p class="title-section">contact</p>
+<h1 class="sub-titile-section"> formulaire de contact</h1>
+
+
 </body>
 </html>
