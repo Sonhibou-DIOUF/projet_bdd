@@ -9,4 +9,5 @@ $conn = mysqli_connect($servername, $username, $password,$database);
 if (!$conn) {
 die("Échec de la connexion : " . mysqli_connect_error());
 }
+
 ?>

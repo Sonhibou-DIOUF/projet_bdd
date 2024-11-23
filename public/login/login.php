@@ -1,37 +1,39 @@
 <?php
+$servername = 'localhost';
+$username = 'root';
+$password = '';
+$database = 'PicturMe';
+//On établit la connexion
+$conn = mysqli_connect($servername, $username, $password,$database);
+// Verifier la connexion
+if (!$conn) {
+    die("Échec de la connexion : " . mysqli_connect_error());
+}
 
 // creer une fonction login  :
-// recupère l'email et le mot de passe
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST"){
+        $email = $_POST['email'];
+        $mot_de_passe =$_POST['mot_de_passe'];
+        $sql = "select email, mot_de_passe from utilisateurs where email = '$email' AND mot_de_passe = '$mot_de_passe'";
+        $result =mysqli_query($conn,$sql);
+        if($result->num_rows > 0){
+            echo "Connexion reussie";
+        }else{
+            echo "Veuilez verifier votre email et votre mot de passe";
+        }
+
+
+}
+
 // Verifie le couple email-motde passe exist dans BDD
+
 // Creer une session avec les cookies
+
 // redirige l'utilisateur vers son tableau de bord
 
-function login($email, $password, $pdo)
-{
-    // Requête SQL pour récupérer l'utilisateur par email
-    $sql = "SELECT * FROM utilisateurs WHERE email = :email";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-    $stmt->execute();
 
-    // Vérifiez si l'utilisateur existe
-    if ($stmt->rowCount() > 0) {
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        // Vérifiez si le mot de passe correspond (hachage pris en charge)
-        if (password_verify($password, $user['mot_de_passe'])) {
-            // Démarrer une session et stocker des informations utilisateur
-            session_start();
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_email'] = $user['email'];
-            $_SESSION['user_nom'] = $user['nom'];
-            return "Connexion réussie !";
-        } else {
-            return "Mot de passe incorrect.";
-        }
-    } else {
-        return "Utilisateur non trouvé.";
-    }
-}
+
 
 
 ?>
@@ -48,14 +50,14 @@ function login($email, $password, $pdo)
 </head>
 <body>
     <div class="wrapper">
-        <form method="post" action="login()">
+        <form method="post" action="login.php">
             <h1>Login</h1>
             <div class="input-box">
                 <input type="email" name="email" id="email" placeholder="Your email">
                 <i class='bx bxs-user'></i>
             </div>
             <div class="input-box">
-                <input type="password" id="password" name="password" placeholder="Password">
+                <input type="password" id="password" name="mot_de_passe" placeholder="Password">
                 <i class='bx bxs-lock-alt'></i>
             </div>
             <div class="remember-forgot">
