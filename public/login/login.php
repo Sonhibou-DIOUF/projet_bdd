@@ -11,20 +11,28 @@ if (!$conn) {
 }
 
 // creer une fonction login  :
-
+if(!empty($_POST['email']) && !empty($_POST['mot_de_passe'])){
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $email = $_POST['email'];
         $mot_de_passe =$_POST['mot_de_passe'];
         $sql = "select email, mot_de_passe from utilisateurs where email = '$email' AND mot_de_passe = '$mot_de_passe'";
         $result =mysqli_query($conn,$sql);
         if($result->num_rows > 0){
-            echo "Connexion reussie";
+            // cookie email et mot de passe
+            setcookie("email", $email, time() + (86400 * 30), "/");
+            setcookie("mot_de_passe", $mot_de_passe, time() + (86400 * 30), "/");
+            // session
+            $_SESSION['$connect'] =timestamp ;
+            header('location: /index.php');
+            echo "Vous etes connecté !";
         }else{
-            echo "Veuilez verifier votre email et votre mot de passe";
+            echo "email ou mot de passe incorrect !";
         }
 
 
+    }
 }
+
 
 // Verifie le couple email-motde passe exist dans BDD
 
@@ -37,42 +45,48 @@ if (!$conn) {
 
 
 ?>
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="../../ressources/StyleLogin.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <!-- Lien vers Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="wrapper">
-        <form method="post" action="login.php">
-            <h1>Login</h1>
-            <div class="input-box">
-                <input type="email" name="email" id="email" placeholder="Your email">
-                <i class='bx bxs-user'></i>
-            </div>
-            <div class="input-box">
-                <input type="password" id="password" name="mot_de_passe" placeholder="Password">
-                <i class='bx bxs-lock-alt'></i>
-            </div>
-            <div class="remember-forgot">
-                <label><input type="checkbox">Remember me</label>
-                <a href="#">Forgot password?</a>
-            </div>
-            <button type="submit" class="btn">Login</button>
-            <div class="register-link">
-                <p> Don't have an account ?  <a href="#">Register</a></p>
-            </div>
+<body class="bg-light">
 
-        </form>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="row w-100">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="text-center mb-4">Connexion</h3>
+                    <form method="POST" action="login.php">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Adresse Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Entrer votre email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mot_de_passe" class="form-label">Mot de Passe</label>
+                            <input type="password" class="form-control" id="password" name="mot_de_passe" placeholder="Entrer votre mot de passe" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                            <label class="form-check-label" for="remember">Se souvenir de moi</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+                    </form>
+                    <p class="text-center mt-3">
+                        Pas encore inscrit ? <a href="register.php">Créer un compte</a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-
-
+<!-- Lien vers Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
