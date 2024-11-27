@@ -10,6 +10,7 @@ if (!$conn) {
     die("Échec de la connexion : " . mysqli_connect_error());
 }
 $sql = "SELECT nom , email FROM client WHERE id_client = 284";
+$sql1 = "SELECT nom , email FROM client WHERE id_client = 284";
 $result = mysqli_query($conn,$sql);
 
 if (mysqli_num_rows($result) > 0) {

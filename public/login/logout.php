@@ -1,5 +1,8 @@
 <?php
 session_start();
+if($_SESSION){
+    header(tim);
+}
 unset($_SESSION['$connect']);
-header('location: ../login/login.php');
+header('location: ../login.php');
 ?>
