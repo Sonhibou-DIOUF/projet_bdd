@@ -1,11 +1,5 @@
 <?php
-$servername = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'PicturMe';
-
-//On établit la connexion
-$conn = mysqli_connect($servername, $username, $password,$database);
+include "../connexion_bdd.php";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date_seance = $_POST['date_seance'];
     $heure = $_POST['heure'];
