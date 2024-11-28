@@ -1,16 +1,10 @@
 
 <?php
-$servername = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'PicturMe';
-
-//On établit la connexion
-$conn = mysqli_connect($servername, $username, $password,$database);
+include "../connexion_bdd.php";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nom = $_POST['nom'];
     $email = $_POST['email'];
-    $sql = "INSERT INTO client (nom, email) VALUES ('$nom', '$email')";
+    $sql = "INSERT INTO Client (nom, email) VALUES ('$nom', '$email')";
     mysqli_query($conn, $sql);
     if (isset($))
         if (empty($nom)) {
