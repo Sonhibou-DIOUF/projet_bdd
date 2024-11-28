@@ -1,16 +1,10 @@
 <?php
-$servername = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'PicturMe';
-//On établit la connexion
-$conn = mysqli_connect($servername, $username, $password,$database);
-// Verifier la connexion
-if (!$conn) {
-    die("Échec de la connexion : " . mysqli_connect_error());
-}
-$sql = "SELECT nom , email FROM client WHERE id_client = 284";
-$sql1 = "SELECT nom , email FROM client WHERE id_client = 284";
+include "../connexion_bdd.php";
+
+// Récupérer toutes les séances réservées par un client spécifique :
+$sql = "SELECT * FROM Client WHERE id_client = 5";
+// Trouver toutes les photos prises par un photographe dans une période donnée :
+
 $result = mysqli_query($conn,$sql);
 
 if (mysqli_num_rows($result) > 0) {

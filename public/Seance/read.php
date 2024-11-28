@@ -1,15 +1,28 @@
 <?php
 include "../connexion_bdd.php";
 
-// Requete sql
+// Obtenir la liste des séances pour lesquelles aucune transaction n'a été émise :
+$sql = "
+SELECT 
+    Seance.id_seance AS idSeance, 
+    Seance.date_seance AS dateSeance 
+FROM 
+    Seance 
+LEFT JOIN 
+    Transaction 
+ON 
+    Seance.id_seance = Transaction.id_seance 
+    AND Transaction.type_transaction = 'facture' 
+WHERE 
+    Transaction.id_transaction IS NULL;
+";
 
-$sql = "SELECT nom , email FROM client WHERE id_client = 284";
-$sql1 = "SELECT nom , email FROM client WHERE id_client = 284";
 $result = mysqli_query($conn,$sql);
 
 if (mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
-        echo "nom: ".$row['nom']. "----email: ".  $row['email']. "<br>";
+        echo "Liste des séances: ".$row['idSeance']."<br>";
+        echo "Liste des séances: ".$row['dateSeance']."<br>";
     }
 } else {
     echo "Aucun résultat trouvé.";
