@@ -1,11 +1,4 @@
 <?php
-$servername = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'PicturMe';
-
-//On établit la connexion
-$conn = mysqli_connect($servername, $username, $password,$database);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nom = $_POST['nom'];
     $specialite = $_POST['specialite'];

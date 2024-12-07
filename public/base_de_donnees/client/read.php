@@ -2,7 +2,7 @@
 include "../connexion_bdd.php";
 
 // Récupérer toutes les séances réservées par un client spécifique :
-$sql = "SELECT * FROM Client WHERE id_client = 5";
+$sql = "SELECT * FROM Client WHERE id_client = *";
 // Trouver toutes les photos prises par un photographe dans une période donnée :
 
 $result = mysqli_query($conn,$sql);

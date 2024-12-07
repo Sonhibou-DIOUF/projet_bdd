@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mot_de_passe =$_POST['mot_de_passe'];
     $sql = "INSERT INTO Client (nom, email,telephone, adresse) VALUES ('$nom','$email','$telephone','$adresse')";
     mysqli_query($conn, $sql);
-    //$sql= "INSERT INTO utilisateurs (email, mot_de_passe) VALUES ('$email','$mot_de_passe')";
+    $sql= "INSERT INTO utilisateurs (email, mot_de_passe) VALUES ('$email','$mot_de_passe')";
     mysqli_query($conn, $sql);
 }
 mysqli_close($conn);

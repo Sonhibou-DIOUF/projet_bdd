@@ -1,11 +1,5 @@
 <?php
-$servername = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'PicturMe';
-
-//On établit la connexion
-$conn = mysqli_connect($servername, $username, $password,$database);
+include "../../login/connexion_bdd.php";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $montant = $_POST['montant'];
     $date_transaction = $_POST['date_transaction'];

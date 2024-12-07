@@ -89,3 +89,25 @@ INSERT INTO Effectue (id_photographe, id_seance) VALUES
                                                      (5, 6), -- Victor Garnier effectue également la séance 6
                                                      (7, 8), -- Paul Richard effectue également la séance 8
                                                      (9, 10); -- Marie Faure effectue également la séance 10
+-- Peuplement de la table Utilisateurs à partir des emails de Client et Photographe
+INSERT INTO utilisateurs (email, mot_de_passe, role) VALUES
+                                                         ('jean.dupont@example.com', 'password_1', 'client'),
+                                                         ('marie.curie@example.com', 'password_2', 'client'),
+                                                         ('alice.martin@example.com', 'password_3', 'client'),
+                                                         ('paul.durand@example.com', 'password_4', 'client'),
+                                                         ('julie.robert@example.com', 'password_5', 'client'),
+                                                         ('martin.leroy@example.com', 'password_6', 'client'),
+                                                         ('emma.petit@example.com', 'password_7', 'client'),
+                                                         ('lucas.fontaine@example.com', 'password_8', 'client'),
+                                                         ('sophie.lambert@example.com', 'password_9', 'client'),
+                                                         ('victor.hugo@example.com', 'password_10', 'client'),
+                                                         ('camille.legrand@example.com', 'password_11', 'photographe'),
+                                                         ('lucas.morel@example.com', 'password_12', 'photographe'),
+                                                         ('emma.lefebvre@example.com', 'password_13', 'photographe'),
+                                                         ('sophie.bernard@example.com', 'password_14', 'photographe'),
+                                                         ('victor.garnier@example.com', 'password_15', 'photographe'),
+                                                         ('julie.martin@example.com', 'password_16', 'photographe'),
+                                                         ('paul.richard@example.com', 'password_17', 'photographe'),
+                                                         ('alice.durand@example.com', 'password_18', 'photographe'),
+                                                         ('marie.faure@example.com', 'password_19', 'photographe'),
+                                                         ('jean.blanc@example.com', 'password_20', 'photographe');
