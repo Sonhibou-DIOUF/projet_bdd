@@ -1,6 +1,6 @@
 <?php
-session_start();
 include "connexion_bdd.php";
+
 // creer une fonction login  :
 if (isset($_SESSION['email'])) {
     header('Location: ../index.php');

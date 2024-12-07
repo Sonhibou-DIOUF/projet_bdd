@@ -1,6 +1,5 @@
 <?php
 include "../../login/connexion_bdd.php"; // Connexion à la base de données
-session_start();
 
 // Vérifier si l'utilisateur est connecté en tant que photographe
 if (!isset($_SESSION['id_photographe'])) {
@@ -10,6 +9,8 @@ if (!isset($_SESSION['id_photographe'])) {
 
 $id_photographe = $_SESSION['id_photographe'];
 
+
+
 // Récupérer les informations du photographe depuis la base de données
 $sql_utilisateur="select email from Utilisateurs where id_utilisateur=$id_photographe";
 $result_utilisateurs = mysqli_query($conn, $sql_utilisateur);
@@ -17,14 +18,14 @@ $utilisateurs =mysqli_fetch_assoc($result_utilisateurs);
 $sql_photographe = "SELECT * FROM Photographe WHERE email = '$utilisateurs[email]'";
 $result_photographe = mysqli_query($conn, $sql_photographe);
 $photographe = mysqli_fetch_assoc($result_photographe);
-
+$id_photographe= $photographe['id_photographe'];
 // Récupérer les séances associées au photographe
-$sql_seances = "SELECT * FROM Seance WHERE id_photographe = '$id_photographe' ORDER BY date_seance DESC";
+$sql_seances = "SELECT * FROM Photographe JOIN Seance ON Seance.id_photographe=Photographe.id_photographe JOIN Client ON Seance.id_client=Client.id_client  WHERE Photographe.id_photographe = '$id_photographe' ORDER BY date_seance DESC";
 $result_seances = mysqli_query($conn, $sql_seances);
 
 // Récupérer les photos prises par le photographe
-$sql_photos = "SELECT * FROM Photo WHERE id_photographe = '$id_photographe'";
-//$result_photos = mysqli_query($conn, $sql_photos);
+$sql_photos = "select * from Seance  JOIN Photo ON Seance.id_seance = Photo.id_seance WHERE Seance.id_photographe = '$id_photographe' ORDER BY date_seance DESC";
+$result_photos = mysqli_query($conn, $sql_photos);
 ?>
 
 <?php
@@ -60,9 +61,10 @@ include "../../composants/navbar.php";
                 <tr>
                     <th>#</th>
                     <th>Date</th>
+                    <th>Heure</th>
                     <th>Lieu</th>
                     <th>Client</th>
-                    <th>Status</th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -71,9 +73,10 @@ include "../../composants/navbar.php";
                         <tr>
                             <td><?php echo $row['id_seance']; ?></td>
                             <td><?php echo $row['date_seance']; ?></td>
+                            <td><?php echo $row['heure']; ?></td>
                             <td><?php echo $row['lieu']; ?></td>
-                            <td><?php echo $row['id_client']; ?></td> <!-- Remplacez ceci par le nom du client si nécessaire -->
-                            <td><?php echo ($row['id_client'] == 1) ? "Confirmée" : "Non confirmée"; ?></td>
+                            <td><?php echo $row['nom']; ?></td>
+
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
@@ -94,7 +97,7 @@ include "../../composants/navbar.php";
                 <?php if (mysqli_num_rows($result_photos) > 0): ?>
                     <?php while ($photo = mysqli_fetch_assoc($result_photos)): ?>
                         <div class="col-md-4 mb-3">
-                            <img src="../../uploads/<?php echo $photo['file_name']; ?>" alt="Photo" class="img-fluid">
+                            <img src="../../uploads/<?php echo $photo['chemin_fichier']; ?>" alt="Photo" class="img-fluid">
                         </div>
                     <?php endwhile; ?>
                 <?php else: ?>

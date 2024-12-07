@@ -5,6 +5,7 @@
         <span class="navbar-brand">PicturMe</span>
         <div class="collapse navbar-collapse justify-content-end">
             <?php
+
             if(isset($_SESSION['email'] )){
                 echo '<a href="../../login/logout.php" class="btn btn-danger d-flex align-items-center ">
                 <i class="fas fa-sign-out-alt me-2"></i> Déconnexion

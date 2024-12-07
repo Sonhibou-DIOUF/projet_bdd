@@ -110,4 +110,5 @@ INSERT INTO utilisateurs (email, mot_de_passe, role) VALUES
                                                          ('paul.richard@example.com', 'password_17', 'photographe'),
                                                          ('alice.durand@example.com', 'password_18', 'photographe'),
                                                          ('marie.faure@example.com', 'password_19', 'photographe'),
-                                                         ('jean.blanc@example.com', 'password_20', 'photographe');
+                                                         ('jean.blanc@example.com', 'password_20', 'photographe'),
+                                                         ('admin@example.com','password_21','admin');

@@ -1,5 +1,4 @@
 <?php
-session_start();
 include "connexion_bdd.php";
 include "../composants/header.php";
 include "../composants/navbar.php";
@@ -49,17 +48,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Créer un compte</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body>
+
 <div class="container mt-5">
-    <h1 class="text-center mb-4">Créer un compte</h1>
+    <h1 class="text-center mb-4">Inscription</h1>
 
     <!-- Messages d'erreur ou de succès -->
     <?php if (!empty($_SESSION['message'])): ?>

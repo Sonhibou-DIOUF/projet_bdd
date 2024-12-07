@@ -21,8 +21,8 @@
         }
         .navbar-brand{
             font-family: 'Lobster', cursive;
+            color: white;
             font-size: 1.8rem;
-            color:white;
         }
         .fa-camera-retro {
             font-size: 2rem;

@@ -1,5 +1,9 @@
 <?php
 include "../../login/connexion_bdd.php";
+include "../../composants/header.php";
+include "../../composants/navbar.php";
+include "../../composants/sidebar.php";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $mot_de_passe =$_POST['mot_de_passe'];
@@ -10,11 +14,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['error'] = 'erreur ajout admin';
     }
 }
-?>
-<?php
-include "../../composants/header.php";
-include "../../composants/admin_navbar.php";
-include "../../composants/sidebar.php";
 ?>
 
 <!-- Main Content -->
