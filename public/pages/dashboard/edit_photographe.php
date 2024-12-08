@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                        WHERE email = '$email'";
             mysqli_query($conn, $sql_update_utilisateur);
         }
-        echo "<script>alert('Photographe mis à jour avec succès.'); window.location.href = 'photographes.php';</script>";
+        echo "<script>alert('Photographe mis à jour avec succès.'); window.location.href = 'dashboard_photographes.php';</script>";
     } else {
         echo "<script>alert('Erreur lors de la mise à jour du photographe.');</script>";
     }
@@ -94,7 +94,7 @@ include "../../composants/navbar.php";
                 <!-- Boutons -->
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Mettre à jour</button>
-                    <a href="photographes.php" class="btn btn-secondary">Annuler</a>
+                    <a href="dashboard_photographes.php" class="btn btn-secondary">Annuler</a>
                 </div>
             </form>
         </div>

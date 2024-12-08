@@ -104,7 +104,4 @@ include "../../composants/sidebar.php";
 </body>
 
 </html>
-<?php
-include "../../composants/alert.php";
-?>
 <?php $conn->close(); ?>

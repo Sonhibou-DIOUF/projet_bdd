@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                    WHERE id_client = '$id_client'";
 
     if (mysqli_query($conn, $sql_update)) {
-        echo "<script>alert('Client mis à jour avec succès.'); window.location.href = 'clients.php';</script>";
+        echo "<script>alert('Client mis à jour avec succès.'); window.location.href = 'dashboard_clients.php';</script>";
     } else {
         echo "<script>alert('Erreur lors de la mise à jour du client.'); window.location.href = 'edit_client.php?id=$id_client';</script>";
     }
@@ -70,7 +70,7 @@ include "../../composants/navbar.php";
                     <input type="text" id="adresse" name="adresse" class="form-control" value="<?php echo $client['adresse']; ?>" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Mettre à jour</button>
-                <a href="clients.php" class="btn btn-secondary">Annuler</a>
+                <a href="dashboard_clients.php" class="btn btn-secondary">Annuler</a>
             </form>
         </div>
     </div>
