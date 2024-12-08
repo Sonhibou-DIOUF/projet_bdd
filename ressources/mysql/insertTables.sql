@@ -96,3 +96,5 @@ INSERT INTO Utilisateurs (email, mot_de_passe, role) VALUES
                                                          ('marie.faure@example.com', 'password_19', 'photographe'),
                                                          ('jean.blanc@example.com', 'password_20', 'photographe'),
                                                          ('admin@example.com','password_21','admin');
+
+-- Peuplement de la table Effectué sera fera directement grace au clés des table de références

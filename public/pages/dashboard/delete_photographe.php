@@ -11,12 +11,12 @@ if (isset($_GET['id'])) {
 
     if (mysqli_query($conn, $sql)) {
         echo "<script>
-            alert('Séance supprimée avec succès.');
+            alert('photographe supprimé avec succès.');
             window.location.href = 'photographes.php'; // Redirection vers la page des photographes
         </script>";
     } else {
         echo "<script>
-            alert('Erreur lors de la suppression de la séance.');
+            alert('Erreur lors de la suppression du photographe.');
             window.location.href = 'photographes.php';
         </script>";
     }

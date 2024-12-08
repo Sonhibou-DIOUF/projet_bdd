@@ -11,12 +11,12 @@ if (isset($_GET['id'])) {
 
     if (mysqli_query($conn, $sql)) {
         echo "<script>
-            alert('Séance supprimée avec succès.');
+            alert('Client supprimé avec succès.');
             window.location.href = 'clients.php'; // Redirection vers la page des clients
         </script>";
     } else {
         echo "<script>
-            alert('Erreur lors de la suppression de la séance.');
+            alert('Erreur lors de la suppression du client.');
             window.location.href = 'clients.php';
         </script>";
     }
