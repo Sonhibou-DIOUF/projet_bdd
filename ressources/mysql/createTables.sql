@@ -58,7 +58,7 @@ CREATE TABLE Transaction (
 CREATE TABLE Effectue (
     id_photographe INT,
     id_seance INT,
-    PRIMARY KEY (id_photographe, id_seance),
+    PRIMARY KEY (id_seance),
     FOREIGN KEY (id_photographe) REFERENCES Photographe(id_photographe),
     FOREIGN KEY (id_seance) REFERENCES Seance(id_seance));
 
