@@ -9,11 +9,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_photographe = $_POST['id_photographe'];
     $id_client = $_POST['id_client'];
 
+    // Insertion dans la table Seance
     $sql = "INSERT INTO Seance (date_seance, heure, lieu, id_photographe, id_client) 
             VALUES ('$date_seance', '$heure', '$lieu', '$id_photographe', '$id_client')";
 
     if (mysqli_query($conn, $sql)) {
-        echo "<script>alert('Séance ajoutée avec succès');</script>";
+        // Récupérer l'id_seance inséré
+        $id_seance = mysqli_insert_id($conn);
+
+        // Insertion dans la table Effectue
+        $sql_effectue = "INSERT INTO Effectue (id_photographe, id_seance)
+                         VALUES ('$id_photographe', '$id_seance')";
+        
+        if (mysqli_query($conn, $sql_effectue)) {
+            echo "<script>alert('Séance et relation ajoutées avec succès');</script>";
+        } else {
+            echo "<script>alert('Erreur lors de l\'ajout de la relation dans Effectue');</script>";
+        }
     } else {
         echo "<script>alert('Erreur lors de l\'ajout de la séance');</script>";
     }
@@ -149,4 +161,3 @@ include "../../composants/sidebar.php";
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
