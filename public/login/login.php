@@ -9,7 +9,7 @@ if(!empty($_POST['email']) && !empty($_POST['mot_de_passe'])){
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $email = $_POST['email'];
         $mot_de_passe = $_POST['mot_de_passe'];
-        $sql = "SELECT * FROM utilisateurs WHERE email = '$email' AND mot_de_passe = '$mot_de_passe'";
+        $sql = "SELECT * FROM Utilisateurs WHERE email = '$email' AND mot_de_passe = '$mot_de_passe'";
         $result = mysqli_query($conn, $sql);
 
         if($result && $result->num_rows > 0){

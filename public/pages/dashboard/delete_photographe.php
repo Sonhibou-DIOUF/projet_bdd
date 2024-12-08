@@ -7,7 +7,7 @@ if (isset($_GET['id'])) {
     $id_seance = $_GET['id'];
 
     // Requête SQL pour supprimer la séance
-    $sql = "DELETE FROM Photographe WHERE id_seance = '$id_photographe'";
+    $sql = "DELETE FROM Photographe WHERE id_photographe = '$id_photographe'";
 
     if (mysqli_query($conn, $sql)) {
         echo "<script>
