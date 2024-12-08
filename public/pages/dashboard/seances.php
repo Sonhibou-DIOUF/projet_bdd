@@ -20,17 +20,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Récupération des séances existantes
-$sql = "SELECT  date_seance , heure, lieu ,id_seance, Client.nom AS nom, Photographe.nom AS nom_photographe
-FROM Seance JOIN Client ON Seance.id_client = Client.id_client JOIN photographe ON Seance.id_photographe = photographe.id_photographe";
+$sql = "SELECT date_seance, heure, lieu, id_seance, Client.nom AS nom, Photographe.nom AS nom_photographe
+        FROM Seance 
+        JOIN Client ON Seance.id_client = Client.id_client 
+        JOIN Photographe ON Seance.id_photographe = Photographe.id_photographe";
 $result = mysqli_query($conn, $sql);
+
+if ($result === false) {
+    die('Erreur SQL : ' . mysqli_error($conn));
+}
 
 // Récupération des photographes
 $sql_photographes = "SELECT id_photographe, nom FROM Photographe";
 $result_photographes = mysqli_query($conn, $sql_photographes);
 
+if ($result_photographes === false) {
+    die('Erreur SQL : ' . mysqli_error($conn));
+}
+
 // Récupération des clients
-$sql_clients = "SELECT id_client, nom FROM Client ";
+$sql_clients = "SELECT id_client, nom FROM Client";
 $result_clients = mysqli_query($conn, $sql_clients);
+
+if ($result_clients === false) {
+    die('Erreur SQL : ' . mysqli_error($conn));
+}
 
 mysqli_close($conn);
 ?>
@@ -105,8 +119,8 @@ include "../../composants/sidebar.php";
                 </tr>
                 </thead>
                 <tbody>
-                <?php if ($result->num_rows > 0): ?>
-                    <?php while ($row = $result->fetch_assoc()): ?>
+                <?php if (mysqli_num_rows($result) > 0): ?>
+                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
                         <tr>
                             <td><?php echo $row['id_seance']; ?></td>
                             <td><?php echo $row['date_seance']; ?></td>
@@ -135,3 +149,4 @@ include "../../composants/sidebar.php";
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
