@@ -7,10 +7,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $montant = $_POST['montant'];
     $date_transaction = $_POST['date_transaction'];
     $type_transaction = $_POST['type_transaction'];
+    $id_seance = $_POST['id_seance']; // Récupérer l'id_seance depuis le formulaire
 
     // Requête d'insertion
-    $sql = "INSERT INTO Transaction (montant, date_transaction, type_transaction) 
-            VALUES ('$montant', '$date_transaction', '$type_transaction')";
+    $sql = "INSERT INTO Transaction (montant, date_transaction, type_transaction, id_seance) 
+            VALUES ('$montant', '$date_transaction', '$type_transaction', '$id_seance')";
     if (mysqli_query($conn, $sql)) {
         echo "<script>alert('Transaction ajoutée avec succès.');</script>";
     } else {
@@ -19,12 +20,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Récupération des transactions existantes
-$sql_transactions = "SELECT id_transaction, montant ,date_transaction , type_transaction , Seance.date_seance AS date_seance, Seance.lieu AS lieu_seance
-FROM Transaction JOIN Seance ON Transaction.id_seance = Seance.id_seance";
+$sql_transactions = "SELECT 
+                        Transaction.id_transaction, 
+                        Transaction.montant, 
+                        Transaction.date_transaction, 
+                        Transaction.type_transaction, 
+                        Seance.date_seance AS date_seance, 
+                        Seance.lieu AS lieu_seance
+                     FROM Transaction 
+                     LEFT JOIN Seance ON Transaction.id_seance = Seance.id_seance";
 $result_transactions = mysqli_query($conn, $sql_transactions);
-
-
 ?>
+
 <?php
 include "../../composants/header.php";
 include "../../composants/navbar.php";
@@ -53,30 +60,24 @@ include "../../composants/sidebar.php";
                     <select id="type_transaction" name="type_transaction" class="form-select" required>
                         <option value="" disabled selected>Choisissez un type</option>
                         <option value="paiement">Paiement</option>
-                        <option value="pacture">Facture</option>
+                        <option value="facture">Facture</option>
                     </select>
                 </div>
-                <div>
-
-
-                    <select  id="type_transaction" name="type_transaction" class="form-select" required>
-
-                        <option value="" disabled selected>Choisissez une Seance</option>
+                <div class="mb-3">
+                    <label for="id_seance" class="form-label">Séance</label>
+                    <select id="id_seance" name="id_seance" class="form-select" required>
+                        <option value="" disabled selected>Choisissez une Séance</option>
                         <?php
-                        $sql = "SELECT * FROM Seance ";
+                        $sql = "SELECT * FROM Seance";
                         $result = mysqli_query($conn, $sql);
                         if ($result->num_rows > 0):
                             while ($row = $result->fetch_assoc()):
-                                echo '<option value="'.$row['id_seance']. '">'.$row["date_seance"].'  du client '.$row["id_client"].'</option>';
+                                echo '<option value="' . $row['id_seance'] . '">' . $row["date_seance"] . ' du client ' . $row["id_client"] . '</option>';
                             endwhile;
-
                         endif;
                         ?>
-
-
                     </select>
                 </div>
-
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Soumettre</button>
                 </div>
@@ -106,13 +107,20 @@ include "../../composants/sidebar.php";
                             <td><?php echo $row['montant']; ?> €</td>
                             <td><?php echo $row['date_transaction']; ?></td>
                             <td><?php echo $row['type_transaction']; ?></td>
-                            <td><?php echo $row['date_seance'] . ' ' . $row['lieu_seance']; ?></td>
-
+                            <td>
+                                <?php 
+                                if ($row['date_seance']) {
+                                    echo $row['date_seance'] . ' ' . $row['lieu_seance']; 
+                                } else {
+                                    echo "Aucune séance associée";
+                                }
+                                ?>
+                            </td>
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="4" class="text-center">Aucune transaction trouvée</td>
+                        <td colspan="5" class="text-center">Aucune transaction trouvée</td>
                     </tr>
                 <?php endif; ?>
                 </tbody>
@@ -124,8 +132,9 @@ include "../../composants/sidebar.php";
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
+
 <?php
 mysqli_close($conn);
 ?>
+
