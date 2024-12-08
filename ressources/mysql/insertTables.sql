@@ -90,7 +90,7 @@ INSERT INTO Effectue (id_photographe, id_seance) VALUES
                                                      (7, 8), -- Paul Richard effectue également la séance 8
                                                      (9, 10); -- Marie Faure effectue également la séance 10
 -- Peuplement de la table Utilisateurs à partir des emails de Client et Photographe
-INSERT INTO utilisateurs (email, mot_de_passe, role) VALUES
+INSERT INTO Utilisateurs (email, mot_de_passe, role) VALUES
                                                          ('jean.dupont@example.com', 'password_1', 'client'),
                                                          ('marie.curie@example.com', 'password_2', 'client'),
                                                          ('alice.martin@example.com', 'password_3', 'client'),

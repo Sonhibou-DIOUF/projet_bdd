@@ -12,7 +12,7 @@ if (isset($_GET['id'])) {
     if (mysqli_query($conn, $sql)) {
         echo "<script>
             alert('Séance supprimée avec succès.');
-            window.location.href = 'photographes.php.php'; // Redirection vers la page des photographes
+            window.location.href = 'photographes.php'; // Redirection vers la page des photographes
         </script>";
     } else {
         echo "<script>
