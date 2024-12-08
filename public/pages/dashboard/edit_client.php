@@ -43,7 +43,6 @@ mysqli_close($conn);
 
 <?php
 include "../../composants/header.php";
-include "../../composants/sidebar.php";
 include "../../composants/navbar.php";
 ?>
 

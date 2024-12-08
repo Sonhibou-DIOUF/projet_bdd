@@ -51,12 +51,11 @@ mysqli_close($conn);
 
 <?php
 include "../../composants/header.php";
-include "../../composants/sidebar.php";
 include "../../composants/navbar.php";
 ?>
 
 <!-- Main Content -->
-<div class="content">
+<div class="container">
     <h1 class="mb-4">Modifier un Photographe</h1>
     <div class="card">
         <div class="card-header">Modifier les informations du photographe</div>

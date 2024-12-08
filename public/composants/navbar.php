@@ -16,6 +16,3 @@
         </div>
     </div>
 </nav>
-<?php
-include "alert.php";
-?>

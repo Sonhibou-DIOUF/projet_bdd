@@ -26,6 +26,7 @@ $result = $conn->query($sql);
 include "../../composants/header.php";
 include "../../composants/navbar.php";
 include "../../composants/sidebar.php";
+
 ?>
 <!-- Main Content -->
 <div class="content">

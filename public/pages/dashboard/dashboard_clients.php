@@ -2,6 +2,7 @@
 include "../../login/connexion_bdd.php"; // Connexion à la base de données
 include "../../composants/header.php";
 include "../../composants/navbar.php";
+include "../../composants/alert.php";
 
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['id_client'])) {

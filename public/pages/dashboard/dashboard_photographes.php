@@ -3,6 +3,7 @@ include "../../login/connexion_bdd.php"; // Connexion à la base de données
 
 // Vérifier si l'utilisateur est connecté en tant que photographe
 if (!isset($_SESSION['id_photographe'])) {
+
     header("Location: ../../login/loginPage.php"); // Rediriger si l'utilisateur n'est pas connecté
     exit();
 }
@@ -31,6 +32,7 @@ $result_photos = mysqli_query($conn, $sql_photos);
 <?php
 include "../../composants/header.php";
 include "../../composants/navbar.php";
+include "../../composants/alert.php";
 ?>
 
 <!-- Main Content -->
@@ -47,7 +49,7 @@ include "../../composants/navbar.php";
             <p><strong>Téléphone :</strong> <?php echo $photographe['telephone']; ?></p>
             <div class="text-center">
                 <a href="edit_photographe.php?id=<?php echo $photographe['id_photographe']; ?>" class="btn btn-warning">Modifier Profil</a>
-                <a href="delete_photographe.php?id=<?php echo $photographe['id_photographe']; ?>" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')">Supprimer Compte</a>
+
             </div>
         </div>
     </div>
