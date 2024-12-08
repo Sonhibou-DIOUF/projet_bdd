@@ -4,7 +4,7 @@ include "../../login/connexion_bdd.php"; // Connexion à la base de données
 
 // Vérifier si un ID est passé en paramètre
 if (isset($_GET['id'])) {
-    $id_seance = $_GET['id'];
+    $id_photographe = $_GET['id'];
 
     // Requête SQL pour supprimer la séance
     $sql = "DELETE FROM Photographe WHERE id_photographe = '$id_photographe'";

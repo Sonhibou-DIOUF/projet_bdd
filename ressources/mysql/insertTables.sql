@@ -72,23 +72,7 @@ INSERT INTO Transaction (montant, date_transaction, type_transaction, id_seance)
                                                                                      (275.00, '2024-12-10', 'facture', 8),
                                                                                      (275.00, '2024-12-11', 'paiement', 8);
 
--- Peuplement de la table Effectue
-INSERT INTO Effectue (id_photographe, id_seance) VALUES
-                                                     (1, 1), -- Camille Legrand effectue la séance 1
-                                                     (2, 2), -- Lucas Morel effectue la séance 2
-                                                     (3, 3), -- Emma Lefebvre effectue la séance 3
-                                                     (4, 4), -- Sophie Bernard effectue la séance 4
-                                                     (5, 5), -- Victor Garnier effectue la séance 5
-                                                     (6, 6), -- Julie Martin effectue la séance 6
-                                                     (7, 7), -- Paul Richard effectue la séance 7
-                                                     (8, 8), -- Alice Durand effectue la séance 8
-                                                     (9, 9), -- Marie Faure effectue la séance 9
-                                                     (10, 10), -- Jean Blanc effectue la séance 10
-                                                     (1, 2), -- Camille Legrand effectue également la séance 2
-                                                     (3, 4), -- Emma Lefebvre effectue également la séance 4
-                                                     (5, 6), -- Victor Garnier effectue également la séance 6
-                                                     (7, 8), -- Paul Richard effectue également la séance 8
-                                                     (9, 10); -- Marie Faure effectue également la séance 10
+
 -- Peuplement de la table Utilisateurs à partir des emails de Client et Photographe
 INSERT INTO Utilisateurs (email, mot_de_passe, role) VALUES
                                                          ('jean.dupont@example.com', 'password_1', 'client'),
