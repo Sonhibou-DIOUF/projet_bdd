@@ -1,49 +1,60 @@
 <?php
+// Inclusion du fichier pour la connexion à la base de données
 include "connexion_bdd.php";
+// Inclusion des composants de l'en-tête et de la barre de navigation
 include "../composants/header.php";
 include "../composants/navbar.php";
 
+// Vérification de la méthode de la requête HTTP
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Récupération des données du formulaire
     $nom = $_POST['nom'];
     $email = $_POST['email'];
     $telephone = $_POST['telephone'];
-    $mot_de_passe =$_POST['mot_de_passe'];
+    $mot_de_passe = $_POST['mot_de_passe'];
     $adresse = $_POST['adresse'];
     $role = $_POST['role']; // Rôle choisi : client ou photographe
 
+    // Vérification du rôle choisi
     if ($role == "client") {
-        // Insérer dans la table Client
+        // Insertion des données dans la table Client
         $sql_client = "INSERT INTO Client (nom, email, telephone, adresse) VALUES ('$nom', '$email', '$telephone', '$adresse')";
         if (mysqli_query($conn, $sql_client)) {
-            // Récupérer l'id_client inséré
+            // Récupération de l'identifiant du client inséré
             $id_client = mysqli_insert_id($conn);
-            // Insérer dans la table utilisateurs
+            // Insertion des données dans la table utilisateurs
             $sql_utilisateur = "INSERT INTO utilisateurs (email, mot_de_passe, role) VALUES ('$email', '$mot_de_passe', 'client')";
             mysqli_query($conn, $sql_utilisateur);
+            // Message de succès et redirection vers le tableau de bord des clients
             $_SESSION['message'] = "Compte client créé avec succès !";
             $_SESSION['id_client'] = $id_client;
             header('location: ../pages/dashboard/dashboard_clients.php');
         } else {
+            // Message d'erreur en cas d'échec de l'insertion
             $_SESSION['error'] = "Erreur lors de la création du compte client.";
         }
     } elseif ($role == "photographe") {
+        // Récupération de la spécialité pour le photographe
         $specialite = $_POST['specialite'];
 
-        // Insérer dans la table Photographe
+        // Insertion des données dans la table Photographe
         $sql_photographe = "INSERT INTO Photographe (nom, email, telephone, specialite) VALUES ('$nom', '$email', '$telephone', '$specialite')";
         if (mysqli_query($conn, $sql_photographe)) {
-            // Récupérer l'id_photographe inséré
+            // Récupération de l'identifiant du photographe inséré
             $id_photographe = mysqli_insert_id($conn);
-            // Insérer dans la table utilisateurs
+            // Insertion des données dans la table utilisateurs
             $sql_utilisateur = "INSERT INTO utilisateurs (email, mot_de_passe, role) VALUES ('$email', '$mot_de_passe', 'photographe')";
             mysqli_query($conn, $sql_utilisateur);
+            // Message de succès et redirection vers le tableau de bord des photographes
             $_SESSION['message'] = "Compte photographe créé avec succès !";
             $_SESSION['id_photographe'] = $id_photographe;
             header('location: ../pages/dashboard/dashboard_photographes.php');
         } else {
+            // Message d'erreur en cas d'échec de l'insertion
             $_SESSION['error'] = "Erreur lors de la création du compte photographe.";
         }
     } else {
+        // Message d'erreur en cas de rôle invalide
         $_SESSION['error'] = "Rôle invalide.";
     }
 }
@@ -83,7 +94,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="tel" id="telephone" name="telephone" class="form-control" placeholder="Votre numéro de téléphone" required>
         </div>
 
-
         <!-- Mot de passe -->
         <div class="mb-3">
             <label for="mot_de_passe" class="form-label">Mot de passe</label>
@@ -105,10 +115,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label for="specialite" class="form-label">Spécialité</label>
             <input type="text" id="specialite" name="specialite" class="form-control" placeholder="Votre spécialité">
         </div>
-        <!-- Adresse -->
+
+        <!-- Adresse (pour les clients uniquement) -->
         <div class="mb-3" id="adresse-container" style="display: none;">
             <label for="adresse" class="form-label">Adresse</label>
-            <input type="tel" id="adresse" name="adresse" class="form-control" placeholder="Votre adresse">
+            <input type="text" id="adresse" name="adresse" class="form-control" placeholder="Votre adresse">
         </div>
 
         <!-- Bouton de soumission -->
