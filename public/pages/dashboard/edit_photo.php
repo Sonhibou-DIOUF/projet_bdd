@@ -10,6 +10,7 @@ if (isset($_GET['id'])) {
     $result = mysqli_query($conn, $sql);
     $photo = mysqli_fetch_assoc($result);
 
+    // Vérifiez si la photo existe
     if (!$photo) {
         echo "<script>alert('Photo introuvable.'); window.location.href = 'photos.php';</script>";
         exit();
@@ -19,12 +20,14 @@ if (isset($_GET['id'])) {
     $sql_seances = "SELECT id_seance, lieu FROM Seance";
     $result2 = mysqli_query($conn, $sql_seances);
 } else {
+    // Si aucun ID n'est passé, afficher une alerte et rediriger vers la page des photos
     echo "<script>alert('Aucune photo spécifiée.'); window.location.href = 'photos.php';</script>";
     exit();
 }
 
 // Gestion de la soumission du formulaire de modification
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Récupération des données du formulaire
     $resolution = $_POST['resolution'];
     $id_seance = $_POST['id_seance'];
     $nom_fichier = $_FILES['file']['name'];
@@ -35,6 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $dossier_cible = "../../uploads/photos/" . $nom_fichier;
 
         if (move_uploaded_file($chemin_temporaire, $dossier_cible)) {
+            // Mise à jour des informations de la photo avec le nouveau fichier
             $sql_update = "UPDATE Photo 
                            SET nom_fichier = '$nom_fichier', resolution = '$resolution', id_seance = '$id_seance' 
                            WHERE id_photo = '$id_photo'";
@@ -48,20 +52,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                        WHERE id_photo = '$id_photo'";
     }
 
+    // Exécuter la requête SQL et vérifier si elle a réussi
     if (mysqli_query($conn, $sql_update)) {
+        // Afficher une alerte de succès et rediriger vers la page des photos
         echo "<script>alert('Photo mise à jour avec succès.'); window.location.href = 'photos.php';</script>";
     } else {
+        // Afficher une alerte d'erreur
         echo "<script>alert('Erreur lors de la mise à jour de la photo.');</script>";
     }
 }
 
+// Fermer la connexion à la base de données
 mysqli_close($conn);
 ?>
 
 <?php
-include "../../composants/header.php";
-include "../../composants/sidebar.php";
-include "../../composants/navbar.php";
+include "../../composants/header.php"; // Inclusion de l'en-tête
+include "../../composants/sidebar.php"; // Inclusion de la barre latérale
+include "../../composants/navbar.php"; // Inclusion de la barre de navigation
 ?>
 
 <!-- Main Content -->
