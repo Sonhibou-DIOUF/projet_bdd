@@ -1,9 +1,9 @@
-
 <?php
-include "../../login/connexion_bdd.php";
+include "../../login/connexion_bdd.php"; // Fichier de connexion à la base de données
 
 // Gestion de l'ajout d'une transaction
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Récupération des données du formulaire
     $montant = $_POST['montant'];
     $date_transaction = $_POST['date_transaction'];
     $type_transaction = $_POST['type_transaction'];
@@ -33,9 +33,9 @@ $result_transactions = mysqli_query($conn, $sql_transactions);
 ?>
 
 <?php
-include "../../composants/header.php";
-include "../../composants/navbar.php";
-include "../../composants/sidebar.php";
+include "../../composants/header.php"; // Inclusion de l'en-tête
+include "../../composants/navbar.php"; // Inclusion de la barre de navigation
+include "../../composants/sidebar.php"; // Inclusion de la barre latérale
 ?>
 
 <!-- Main Content -->
@@ -135,6 +135,6 @@ include "../../composants/sidebar.php";
 </html>
 
 <?php
+// Fermer la connexion à la base de données
 mysqli_close($conn);
 ?>
-
