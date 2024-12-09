@@ -1,8 +1,8 @@
 <?php
 include "../../login/connexion_bdd.php"; // Connexion à la base de données
-include "../../composants/header.php";
-include "../../composants/navbar.php";
-include "../../composants/alert.php";
+include "../../composants/header.php"; // Inclusion de l'en-tête
+include "../../composants/navbar.php"; // Inclusion de la barre de navigation
+include "../../composants/alert.php"; // Inclusion des alertes
 
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['id_client'])) {
@@ -13,15 +13,15 @@ if (!isset($_SESSION['id_client'])) {
 $id_client = $_SESSION['id_client'];
 
 // Récupérer les informations du client depuis la base de données
-$sql_utilisateur = "select email from Utilisateurs where id_utilisateur=$id_client"; // coorection sur la bdd
+$sql_utilisateur = "select email from Utilisateurs where id_utilisateur=$id_client"; // Correction sur la base de données
 $result_utilisateurs = mysqli_query($conn, $sql_utilisateur);
 $utilisateurs = mysqli_fetch_assoc($result_utilisateurs);
 $sql_client = "SELECT * FROM Client WHERE email = '$utilisateurs[email]'";
 $result_client = mysqli_query($conn, $sql_client);
 $client = mysqli_fetch_assoc($result_client);
 $id_client= $client['id_client'];
-// Récupérer les séances du client
 
+// Récupérer les séances du client
 $sql_seances = "SELECT * FROM Seance JOIN Client ON Seance.id_client = Client.id_client JOIN Photographe ON Seance.id_photographe = Photographe.id_photographe 
 WHERE Client.id_client=$id_client ORDER BY date_seance DESC";
 $result_seances = mysqli_query($conn, $sql_seances);
@@ -66,12 +66,10 @@ $result_photos = mysqli_query($conn, $sql_photos);
                 <?php if (mysqli_num_rows($result_seances) > 0): ?>
                     <?php while ($row = mysqli_fetch_assoc($result_seances)): ?>
                         <tr>
-
                             <td><?php echo $row['date_seance']; ?></td>
                             <td><?php echo $row['lieu']; ?></td>
                             <td><?php echo $row['heure']; ?></td>
                             <td><?php echo $row['nom']; ?></td>
-
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
@@ -101,13 +99,12 @@ $result_photos = mysqli_query($conn, $sql_photos);
             </div>
         </div>
     </div>
-
 </div>
 
 </body>
 </html>
 
 <?php
+// Fermeture de la connexion à la base de données
 mysqli_close($conn);
 ?>
-
