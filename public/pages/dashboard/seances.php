@@ -3,6 +3,7 @@ include "../../login/connexion_bdd.php"; // Fichier de connexion à la base de d
 
 // Gestion de la soumission du formulaire
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Récupération des données du formulaire
     $date_seance = $_POST['date_seance'];
     $heure = $_POST['heure'];
     $lieu = $_POST['lieu'];
@@ -13,6 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "INSERT INTO Seance (date_seance, heure, lieu, id_photographe, id_client) 
             VALUES ('$date_seance', '$heure', '$lieu', '$id_photographe', '$id_client')";
 
+    // Vérification si l'insertion a réussi
     if (mysqli_query($conn, $sql)) {
         // Récupérer l'id_seance inséré
         $id_seance = mysqli_insert_id($conn);
@@ -21,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql_effectue = "INSERT INTO Effectue (id_photographe, id_seance)
                          VALUES ('$id_photographe', '$id_seance')";
         
+        // Vérification si l'insertion a réussi
         if (mysqli_query($conn, $sql_effectue)) {
             echo "<script>alert('Séance et relation ajoutées avec succès');</script>";
         } else {
@@ -38,6 +41,7 @@ $sql = "SELECT date_seance, heure, lieu, id_seance, Client.nom AS nom, Photograp
         JOIN Photographe ON Seance.id_photographe = Photographe.id_photographe";
 $result = mysqli_query($conn, $sql);
 
+// Vérification de l'exécution de la requête SQL
 if ($result === false) {
     die('Erreur SQL : ' . mysqli_error($conn));
 }
@@ -46,6 +50,7 @@ if ($result === false) {
 $sql_photographes = "SELECT id_photographe, nom FROM Photographe";
 $result_photographes = mysqli_query($conn, $sql_photographes);
 
+// Vérification de l'exécution de la requête SQL pour les photographes
 if ($result_photographes === false) {
     die('Erreur SQL : ' . mysqli_error($conn));
 }
@@ -54,16 +59,18 @@ if ($result_photographes === false) {
 $sql_clients = "SELECT id_client, nom FROM Client";
 $result_clients = mysqli_query($conn, $sql_clients);
 
+// Vérification de l'exécution de la requête SQL pour les clients
 if ($result_clients === false) {
     die('Erreur SQL : ' . mysqli_error($conn));
 }
 
+// Fermeture de la connexion à la base de données
 mysqli_close($conn);
 ?>
 <?php
-include "../../composants/header.php";
-include "../../composants/navbar.php";
-include "../../composants/sidebar.php";
+include "../../composants/header.php"; // Inclusion de l'en-tête
+include "../../composants/navbar.php"; // Inclusion de la barre de navigation
+include "../../composants/sidebar.php"; // Inclusion de la barre latérale
 ?>
 
 <!-- Main Content -->
