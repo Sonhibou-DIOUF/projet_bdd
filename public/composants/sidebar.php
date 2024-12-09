@@ -1,4 +1,5 @@
 <?php
+// Récupère le nom de la page courante pour marquer l'élément actif dans la barre de navigation
 $current_page = basename($_SERVER['PHP_SELF']); // Pour savoir la page courante ( items selectionne par l'utilsateur)
 ?>
 
