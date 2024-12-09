@@ -9,12 +9,15 @@ if (isset($_GET['id'])) {
     // Requête SQL pour supprimer la séance
     $sql = "DELETE FROM Seance WHERE id_seance = '$id_seance'";
 
+    // Exécuter la requête SQL et vérifier si elle a réussi
     if (mysqli_query($conn, $sql)) {
+        // Si la suppression a réussi, afficher une alerte et rediriger vers la page des séances
         echo "<script>
             alert('Séance supprimée avec succès.');
             window.location.href = 'seances.php'; // Redirection vers la page des séances
         </script>";
     } else {
+        // Si la suppression a échoué, afficher une alerte d'erreur et rediriger vers la page des séances
         echo "<script>
             alert('Erreur lors de la suppression de la séance.');
             window.location.href = 'seances.php';
@@ -26,6 +29,7 @@ if (isset($_GET['id'])) {
     exit();
 }
 
+// Fermer la connexion à la base de données
 mysqli_close($conn);
 
 ?>
