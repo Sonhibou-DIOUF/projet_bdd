@@ -3,36 +3,35 @@ include "../../login/connexion_bdd.php"; // Connexion à la base de données
 
 // Vérifier si l'utilisateur est connecté en tant que photographe
 if (!isset($_SESSION['id_photographe'])) {
-
     header("Location: ../../login/loginPage.php"); // Rediriger si l'utilisateur n'est pas connecté
     exit();
 }
 
 $id_photographe = $_SESSION['id_photographe'];
 
-
-
 // Récupérer les informations du photographe depuis la base de données
-$sql_utilisateur="select email from Utilisateurs where id_utilisateur=$id_photographe";
+$sql_utilisateur = "SELECT email FROM Utilisateurs WHERE id_utilisateur=$id_photographe";
 $result_utilisateurs = mysqli_query($conn, $sql_utilisateur);
-$utilisateurs =mysqli_fetch_assoc($result_utilisateurs);
+$utilisateurs = mysqli_fetch_assoc($result_utilisateurs);
+
 $sql_photographe = "SELECT * FROM Photographe WHERE email = '$utilisateurs[email]'";
 $result_photographe = mysqli_query($conn, $sql_photographe);
 $photographe = mysqli_fetch_assoc($result_photographe);
-$id_photographe= $photographe['id_photographe'];
+$id_photographe = $photographe['id_photographe'];
+
 // Récupérer les séances associées au photographe
-$sql_seances = "SELECT * FROM Photographe JOIN Seance ON Seance.id_photographe=Photographe.id_photographe JOIN Client ON Seance.id_client=Client.id_client  WHERE Photographe.id_photographe = '$id_photographe' ORDER BY date_seance DESC";
+$sql_seances = "SELECT * FROM Photographe JOIN Seance ON Seance.id_photographe = Photographe.id_photographe JOIN Client ON Seance.id_client = Client.id_client WHERE Photographe.id_photographe = '$id_photographe' ORDER BY date_seance DESC";
 $result_seances = mysqli_query($conn, $sql_seances);
 
 // Récupérer les photos prises par le photographe
-$sql_photos = "select * from Seance  JOIN Photo ON Seance.id_seance = Photo.id_seance WHERE Seance.id_photographe = '$id_photographe' ORDER BY date_seance DESC";
+$sql_photos = "SELECT * FROM Seance JOIN Photo ON Seance.id_seance = Photo.id_seance WHERE Seance.id_photographe = '$id_photographe' ORDER BY date_seance DESC";
 $result_photos = mysqli_query($conn, $sql_photos);
 ?>
 
 <?php
-include "../../composants/header.php";
-include "../../composants/navbar.php";
-include "../../composants/alert.php";
+include "../../composants/header.php"; // Inclusion de l'en-tête
+include "../../composants/navbar.php"; // Inclusion de la barre de navigation
+include "../../composants/alert.php"; // Inclusion des alertes
 ?>
 
 <!-- Main Content -->
@@ -49,7 +48,6 @@ include "../../composants/alert.php";
             <p><strong>Téléphone :</strong> <?php echo $photographe['telephone']; ?></p>
             <div class="text-center">
                 <a href="edit_photographe.php?id=<?php echo $photographe['id_photographe']; ?>" class="btn btn-warning">Modifier Profil</a>
-
             </div>
         </div>
     </div>
@@ -66,7 +64,6 @@ include "../../composants/alert.php";
                     <th>Heure</th>
                     <th>Lieu</th>
                     <th>Client</th>
-
                 </tr>
                 </thead>
                 <tbody>
@@ -78,7 +75,6 @@ include "../../composants/alert.php";
                             <td><?php echo $row['heure']; ?></td>
                             <td><?php echo $row['lieu']; ?></td>
                             <td><?php echo $row['nom']; ?></td>
-
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
@@ -108,13 +104,12 @@ include "../../composants/alert.php";
             </div>
         </div>
     </div>
-
 </div>
 
 </body>
 </html>
 
 <?php
+// Fermeture de la connexion à la base de données
 mysqli_close($conn);
 ?>
-
