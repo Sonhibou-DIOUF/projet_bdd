@@ -1,6 +1,7 @@
 <?php
-include "../../login/connexion_bdd.php";
+include "../../login/connexion_bdd.php"; // Connexion à la base de données
 
+// Vérifier si la méthode de la requête est POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Récupération du fichier téléchargé
     $chemin_fichier_tmp = $_FILES['file']['tmp_name'];
@@ -10,6 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dossier_cible = "../../../ressources/images/";
     $chemin_fichier = $dossier_cible . basename($nom_fichier);
 
+    // Vérifier si le fichier a été déplacé avec succès
     if (move_uploaded_file($chemin_fichier_tmp, $chemin_fichier)) {
         echo "<script>alert('Fichier uploadé avec succès !');</script>";
     } else {
@@ -37,9 +39,9 @@ $result2 = mysqli_query($conn, $sql2);
 ?>
 
 <?php
-include "../../composants/header.php";
-include "../../composants/sidebar.php";
-include "../../composants/navbar.php";
+include "../../composants/header.php"; // Inclusion de l'en-tête
+include "../../composants/sidebar.php"; // Inclusion de la barre latérale
+include "../../composants/navbar.php"; // Inclusion de la barre de navigation
 ?>
 
 <!-- Main Content -->
@@ -132,5 +134,6 @@ include "../../composants/navbar.php";
 </html>
 
 <?php
+// Fermer la connexion à la base de données
 mysqli_close($conn);
 ?>
