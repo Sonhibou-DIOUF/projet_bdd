@@ -10,17 +10,20 @@ if (isset($_GET['id'])) {
     $result = mysqli_query($conn, $sql);
     $photographe = mysqli_fetch_assoc($result);
 
+    // Vérifiez si le photographe existe
     if (!$photographe) {
         echo "<script>alert('Photographe introuvable.'); window.location.href = 'photographes.php';</script>";
         exit();
     }
 } else {
+    // Si aucun ID n'est passé, afficher une alerte et rediriger vers la page des photographes
     echo "<script>alert('Aucun photographe spécifié.'); window.location.href = 'photographes.php';</script>";
     exit();
 }
 
 // Gestion de la soumission du formulaire de modification
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Récupération des données du formulaire
     $nom = $_POST['nom'];
     $specialite = $_POST['specialite'];
     $telephone = $_POST['telephone'];
@@ -32,6 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                SET nom = '$nom', specialite = '$specialite', telephone = '$telephone', email = '$email' 
                                WHERE id_photographe = '$id_photographe'";
 
+    // Exécuter la requête SQL pour la mise à jour des informations
     if (mysqli_query($conn, $sql_update_photographe)) {
         // Mise à jour du mot de passe dans la table Utilisateurs, si fourni
         if (!empty($mot_de_passe)) {
@@ -40,18 +44,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                        WHERE email = '$email'";
             mysqli_query($conn, $sql_update_utilisateur);
         }
+        // Afficher une alerte de succès et rediriger vers le tableau de bord des photographes
         echo "<script>alert('Photographe mis à jour avec succès.'); window.location.href = 'dashboard_photographes.php';</script>";
     } else {
+        // Afficher une alerte d'erreur en cas d'échec de la mise à jour
         echo "<script>alert('Erreur lors de la mise à jour du photographe.');</script>";
     }
 }
 
+// Fermer la connexion à la base de données
 mysqli_close($conn);
 ?>
 
 <?php
-include "../../composants/header.php";
-include "../../composants/navbar.php";
+include "../../composants/header.php"; // Inclusion de l'en-tête
+include "../../composants/navbar.php"; // Inclusion de la barre de navigation
 ?>
 
 <!-- Main Content -->
@@ -103,4 +110,3 @@ include "../../composants/navbar.php";
 
 </body>
 </html>
-
