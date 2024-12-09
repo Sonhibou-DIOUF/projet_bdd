@@ -1,33 +1,43 @@
-
 <?php
+// Inclusion du fichier pour la connexion à la base de données
 include "../../login/connexion_bdd.php";
+
+// Vérification de la méthode de la requête HTTP
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Récupération des données du formulaire
     $nom = $_POST['nom'];
     $email = $_POST['email'];
     $telephone = $_POST['telephone'];
     $adresse = $_POST['adresse'];
-    $mot_de_passe =$_POST['mot_de_passe'];
+    $mot_de_passe = $_POST['mot_de_passe'];
+
+    // Insertion des données dans la table Client
     $sql = "INSERT INTO Client (nom, email,telephone, adresse) VALUES ('$nom','$email','$telephone','$adresse')";
-    if(mysqli_query($conn, $sql)){
+    if (mysqli_query($conn, $sql)) {
+        // Message de succès en cas d'insertion réussie
         $_SESSION['success'] = 'client ajouté avec succes';
-    }else{
+    } else {
+        // Message d'erreur en cas d'échec de l'insertion
         $_SESSION['error'] = 'erreur ajout client';
     }
-    $sql= "INSERT INTO utilisateurs (email, mot_de_passe,role) VALUES ('$email','$mot_de_passe','client')";
+
+    // Insertion des données dans la table utilisateurs
+    $sql = "INSERT INTO utilisateurs (email, mot_de_passe,role) VALUES ('$email','$mot_de_passe','client')";
     mysqli_query($conn, $sql);
 }
+
 // Récupérer la liste des clients
 $sql = "SELECT * FROM Client";
-
 $result = $conn->query($sql);
 ?>
 
 <?php
+// Inclusion des composants de l'en-tête, de la barre de navigation et de la barre latérale
 include "../../composants/header.php";
 include "../../composants/navbar.php";
 include "../../composants/sidebar.php";
-
 ?>
+
 <!-- Main Content -->
 <div class="content">
     <h1 class="mb-4">Gestion des Clients</h1>
@@ -104,4 +114,7 @@ include "../../composants/sidebar.php";
 </body>
 
 </html>
-<?php $conn->close(); ?>
+<?php
+// Ferme la connexion à la base de données
+$conn->close();
+?>
