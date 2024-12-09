@@ -18,6 +18,7 @@ if (isset($_GET['id'])) {
 
     // Traitement de la mise à jour de la séance
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Récupérer les données du formulaire
         $date_seance = $_POST['date_seance'];
         $heure = $_POST['heure'];
         $lieu = $_POST['lieu'];
@@ -25,8 +26,10 @@ if (isset($_GET['id'])) {
         // Requête SQL pour mettre à jour la séance
         $update_sql = "UPDATE Seance SET date_seance = '$date_seance', heure = '$heure', lieu = '$lieu' WHERE id_seance = '$id_seance'";
         if (mysqli_query($conn, $update_sql)) {
+            // Alerte de succès et redirection
             echo "<script>alert('Séance mise à jour avec succès.'); window.location.href = 'seances.php';</script>";
         } else {
+            // Alerte d'erreur
             echo "<script>alert('Erreur lors de la mise à jour de la séance.');</script>";
         }
     }
@@ -36,13 +39,14 @@ if (isset($_GET['id'])) {
     exit();
 }
 
+// Fermer la connexion à la base de données
 mysqli_close($conn);
 ?>
 
 <?php
-include "../../composants/header.php";
-include "../../composants/sidebar.php";
-include "../../composants/navbar.php";
+include "../../composants/header.php"; // Inclusion de l'en-tête
+include "../../composants/sidebar.php"; // Inclusion de la barre latérale
+include "../../composants/navbar.php"; // Inclusion de la barre de navigation
 ?>
 
 <!-- Main Content -->
@@ -76,5 +80,3 @@ include "../../composants/navbar.php";
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-?>
