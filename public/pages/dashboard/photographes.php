@@ -1,7 +1,9 @@
 <?php
-include "../../login/connexion_bdd.php";
+include "../../login/connexion_bdd.php"; // Connexion à la base de données
 
+// Vérifiez si la méthode de la requête est POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Récupérer les données du formulaire
     $nom = $_POST['nom'];
     $specialite = $_POST['specialite'];
     $email = $_POST['email'];
@@ -14,10 +16,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_query($conn, $sql_photographe);
 
     // Insertion dans la table Utilisateurs
-    $sql_utilisateur = "INSERT INTO utilisateurs (email, mot_de_passe,role) 
-                        VALUES ('$email', '$mot_de_passe','photographe')";
+    $sql_utilisateur = "INSERT INTO utilisateurs (email, mot_de_passe, role) 
+                        VALUES ('$email', '$mot_de_passe', 'photographe')";
     mysqli_query($conn, $sql_utilisateur);
 
+    // Afficher un message de succès
     echo "<script>alert('Photographe ajouté avec succès.');</script>";
 }
 
@@ -28,9 +31,9 @@ $result_photographes = mysqli_query($conn, $sql_photographes);
 ?>
 
 <?php
-include "../../composants/header.php";
-include "../../composants/navbar.php";
-include "../../composants/sidebar.php";
+include "../../composants/header.php"; // Inclusion de l'en-tête
+include "../../composants/navbar.php"; // Inclusion de la barre de navigation
+include "../../composants/sidebar.php"; // Inclusion de la barre latérale
 ?>
 <!-- Main Content -->
 <div class="content">
@@ -115,7 +118,6 @@ include "../../composants/sidebar.php";
 
 </html>
 
-
 <?php
-mysqli_close($conn);
+mysqli_close($conn); // Fermer la connexion à la base de données
 ?>
