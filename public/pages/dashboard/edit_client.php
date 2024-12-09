@@ -10,17 +10,20 @@ if (isset($_GET['id'])) {
     $result = mysqli_query($conn, $sql);
     $client = mysqli_fetch_assoc($result);
 
+    // Vérifiez si le client existe
     if (!$client) {
         echo "<script>alert('Client introuvable.'); window.location.href = 'clients.php';</script>";
         exit();
     }
 } else {
+    // Si aucun ID n'est passé, afficher une alerte et rediriger vers la page des clients
     echo "<script>alert('Aucun client spécifié.'); window.location.href = 'clients.php';</script>";
     exit();
 }
 
 // Gestion de la soumission du formulaire pour la modification
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Récupération des données du formulaire
     $nom = $_POST['nom'];
     $email = $_POST['email'];
     $telephone = $_POST['telephone'];
@@ -31,19 +34,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                    SET nom = '$nom', email = '$email', telephone = '$telephone', adresse = '$adresse' 
                    WHERE id_client = '$id_client'";
 
+    // Vérifiez si la mise à jour a réussi
     if (mysqli_query($conn, $sql_update)) {
+        // Afficher une alerte de succès et rediriger vers le tableau de bord des clients
         echo "<script>alert('Client mis à jour avec succès.'); window.location.href = 'dashboard_clients.php';</script>";
     } else {
+        // Afficher une alerte d'erreur et rediriger vers la page de modification du client
         echo "<script>alert('Erreur lors de la mise à jour du client.'); window.location.href = 'edit_client.php?id=$id_client';</script>";
     }
 }
 
+// Fermer la connexion à la base de données
 mysqli_close($conn);
 ?>
 
 <?php
-include "../../composants/header.php";
-include "../../composants/navbar.php";
+include "../../composants/header.php"; // Inclusion de l'en-tête
+include "../../composants/navbar.php"; // Inclusion de la barre de navigation
 ?>
 
 <!-- Main Content -->
@@ -78,4 +85,3 @@ include "../../composants/navbar.php";
 
 </body>
 </html>
-
