@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Message de succès et redirection
             $_SESSION['message'] = "Compte client créé avec succès !";
             $_SESSION['id_client'] = $id_client;
-            header('location: ../pages/dashboard/dashboard_clients.php');
+            header('location: loginPage.php');
             exit();
         } else {
             // Message d'erreur en cas d'échec de l'insertion
@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Message de succès et redirection
             $_SESSION['message'] = "Compte photographe créé avec succès !";
             $_SESSION['id_photographe'] = $id_photographe;
-            header('location: ../pages/dashboard/dashboard_photographes.php');
+            header('location: loginPage.php');
             exit();
         } else {
             // Message d'erreur en cas d'échec de l'insertion
