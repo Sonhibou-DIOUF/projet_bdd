@@ -33,6 +33,7 @@ if (isset($_SESSION['success'])) {
 
     // Supprimer la variable de session après 1 seconde côté serveur
     unset($_SESSION['message']);
-
+    unset($_SESSION['success']);
+    unset($_SESSION['error']);
 
 ?>
