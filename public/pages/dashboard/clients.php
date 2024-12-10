@@ -11,22 +11,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $adresse = $_POST['adresse'];
     $mot_de_passe = $_POST['mot_de_passe'];
 
-    // Insertion des données dans la table Client
-    $sql = "INSERT INTO Client (nom, email,telephone, adresse) VALUES ('$nom','$email','$telephone','$adresse')";
-    if (mysqli_query($conn, $sql)) {
-        // Message de succès en cas d'insertion réussie
-        $_SESSION['success'] = 'client ajouté avec succes';
+    // Insertion des données dans la table Client avec une requête préparée
+    $sql = "INSERT INTO Client (nom, email, telephone, adresse) VALUES (?, ?, ?, ?)";
+    $stmt = mysqli_prepare($conn, $sql);
+    if ($stmt) {
+        // Lier les paramètres
+        mysqli_stmt_bind_param($stmt, "ssss", $nom, $email, $telephone, $adresse);
+
+        // Exécuter la requête
+        if (mysqli_stmt_execute($stmt)) {
+            // Message de succès en cas d'insertion réussie
+            $_SESSION['success'] = 'Client ajouté avec succès';
+        } else {
+            // Message d'erreur en cas d'échec de l'insertion
+            $_SESSION['error'] = 'Erreur lors de l\'ajout du client';
+        }
+
+        // Fermer la requête préparée
+        mysqli_stmt_close($stmt);
     } else {
-        // Message d'erreur en cas d'échec de l'insertion
-        $_SESSION['error'] = 'erreur ajout client';
+        // Gestion de l'erreur si la préparation échoue
+        $_SESSION['error'] = 'Une erreur s\'est produite lors de la préparation de la requête';
     }
 
-    // Insertion des données dans la table utilisateurs
-    $sql = "INSERT INTO utilisateurs (email, mot_de_passe,role) VALUES ('$email','$mot_de_passe','client')";
-    mysqli_query($conn, $sql);
+    // Insertion des données dans la table utilisateurs avec une requête préparée
+    $sql_user = "INSERT INTO utilisateurs (email, mot_de_passe, role) VALUES (?, ?, 'client')";
+    $stmt_user = mysqli_prepare($conn, $sql_user);
+    if ($stmt_user) {
+        // Lier les paramètres
+        mysqli_stmt_bind_param($stmt_user, "ss", $email, $mot_de_passe);
+
+        // Exécuter la requête
+        if (mysqli_stmt_execute($stmt_user)) {
+            // Message de succès pour l'ajout d'utilisateur
+            $_SESSION['success'] = 'Utilisateur ajouté avec succès';
+        } else {
+            // Message d'erreur en cas d'échec de l'insertion de l'utilisateur
+            $_SESSION['error'] = 'Erreur lors de l\'ajout de l\'utilisateur';
+        }
+
+        // Fermer la requête préparée pour l'utilisateur
+        mysqli_stmt_close($stmt_user);
+    } else {
+        // Gestion de l'erreur si la préparation échoue
+        $_SESSION['error'] = 'Une erreur s\'est produite lors de la préparation de la requête pour l\'utilisateur';
+    }
 }
 
-// Récupérer la liste des clients
+// Récupérer la liste des clients avec une requête sécurisée
 $sql = "SELECT * FROM Client";
 $result = $conn->query($sql);
 ?>

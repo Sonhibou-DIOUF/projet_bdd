@@ -3,74 +3,68 @@ include "../../login/connexion_bdd.php"; // Fichier de connexion à la base de d
 
 // Gestion de la soumission du formulaire
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Récupération des données du formulaire
-    $date_seance = $_POST['date_seance'];
-    $heure = $_POST['heure'];
-    $lieu = $_POST['lieu'];
-    $id_photographe = $_POST['id_photographe'];
-    $id_client = $_POST['id_client'];
+    // Récupération et validation des données du formulaire
+    $date_seance = htmlspecialchars(trim($_POST['date_seance']));
+    $heure = htmlspecialchars(trim($_POST['heure']));
+    $lieu = htmlspecialchars(trim($_POST['lieu']));
+    $id_photographe = intval($_POST['id_photographe']);
+    $id_client = intval($_POST['id_client']);
 
-    // Insertion dans la table Seance
-    $sql = "INSERT INTO Seance (date_seance, heure, lieu, id_photographe, id_client) 
-            VALUES ('$date_seance', '$heure', '$lieu', '$id_photographe', '$id_client')";
+    if (!empty($date_seance) && !empty($heure) && !empty($lieu) && $id_photographe && $id_client) {
+        // Insertion dans la table Seance
+        $sql = "INSERT INTO Seance (date_seance, heure, lieu, id_photographe, id_client) 
+                VALUES (?, ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "ssssi", $date_seance, $heure, $lieu, $id_photographe, $id_client);
 
-    // Vérification si l'insertion a réussi
-    if (mysqli_query($conn, $sql)) {
-        // Récupérer l'id_seance inséré
-        $id_seance = mysqli_insert_id($conn);
+        if (mysqli_stmt_execute($stmt)) {
+            // Récupérer l'id_seance inséré
+            $id_seance = mysqli_insert_id($conn);
 
-        // Insertion dans la table Effectue
-        $sql_effectue = "INSERT INTO Effectue (id_photographe, id_seance)
-                         VALUES ('$id_photographe', '$id_seance')";
-        
-        // Vérification si l'insertion a réussi
-        if (mysqli_query($conn, $sql_effectue)) {
-            echo "<script>alert('Séance et relation ajoutées avec succès');</script>";
+            // Insertion dans la table Effectue
+            $sql_effectue = "INSERT INTO Effectue (id_photographe, id_seance) VALUES (?, ?)";
+            $stmt_effectue = mysqli_prepare($conn, $sql_effectue);
+            mysqli_stmt_bind_param($stmt_effectue, "ii", $id_photographe, $id_seance);
+
+            if (mysqli_stmt_execute($stmt_effectue)) {
+                echo "<script>alert('Séance et relation ajoutées avec succès.');</script>";
+            } else {
+                echo "<script>alert('Erreur lors de l\'ajout de la relation dans Effectue.');</script>";
+            }
+
+            mysqli_stmt_close($stmt_effectue);
         } else {
-            echo "<script>alert('Erreur lors de l\'ajout de la relation dans Effectue');</script>";
+            echo "<script>alert('Erreur lors de l\'ajout de la séance.');</script>";
         }
+
+        mysqli_stmt_close($stmt);
     } else {
-        echo "<script>alert('Erreur lors de l\'ajout de la séance');</script>";
+        echo "<script>alert('Tous les champs sont obligatoires.');</script>";
     }
 }
 
 // Récupération des séances existantes
-$sql = "SELECT date_seance, heure, lieu, id_seance, Client.nom AS nom, Photographe.nom AS nom_photographe
+$sql = "SELECT date_seance, heure, lieu, id_seance, Client.nom AS client_nom, Photographe.nom AS photographe_nom
         FROM Seance 
         JOIN Client ON Seance.id_client = Client.id_client 
         JOIN Photographe ON Seance.id_photographe = Photographe.id_photographe";
 $result = mysqli_query($conn, $sql);
 
-// Vérification de l'exécution de la requête SQL
-if ($result === false) {
-    die('Erreur SQL : ' . mysqli_error($conn));
-}
-
 // Récupération des photographes
 $sql_photographes = "SELECT id_photographe, nom FROM Photographe";
 $result_photographes = mysqli_query($conn, $sql_photographes);
-
-// Vérification de l'exécution de la requête SQL pour les photographes
-if ($result_photographes === false) {
-    die('Erreur SQL : ' . mysqli_error($conn));
-}
 
 // Récupération des clients
 $sql_clients = "SELECT id_client, nom FROM Client";
 $result_clients = mysqli_query($conn, $sql_clients);
 
-// Vérification de l'exécution de la requête SQL pour les clients
-if ($result_clients === false) {
-    die('Erreur SQL : ' . mysqli_error($conn));
-}
-
 // Fermeture de la connexion à la base de données
 mysqli_close($conn);
 ?>
 <?php
-include "../../composants/header.php"; // Inclusion de l'en-tête
-include "../../composants/navbar.php"; // Inclusion de la barre de navigation
-include "../../composants/sidebar.php"; // Inclusion de la barre latérale
+include "../../composants/header.php";
+include "../../composants/navbar.php";
+include "../../composants/sidebar.php";
 ?>
 
 <!-- Main Content -->
@@ -84,15 +78,15 @@ include "../../composants/sidebar.php"; // Inclusion de la barre latérale
             <form action="seances.php" method="post">
                 <div class="mb-3">
                     <label for="date_seance" class="form-label">Date de la séance</label>
-                    <input type="date" id="date_seance" name="date_seance" class="form-control" placeholder="Date de la séance" required>
+                    <input type="date" id="date_seance" name="date_seance" class="form-control" required>
                 </div>
                 <div class="mb-3">
                     <label for="heure" class="form-label">Heure de la séance</label>
-                    <input type="time" id="heure" name="heure" class="form-control" placeholder="Heure de la séance" required>
+                    <input type="time" id="heure" name="heure" class="form-control" required>
                 </div>
                 <div class="mb-3">
                     <label for="lieu" class="form-label">Lieu</label>
-                    <input type="text" id="lieu" name="lieu" class="form-control" placeholder="Lieu de la séance" required>
+                    <input type="text" id="lieu" name="lieu" class="form-control" required>
                 </div>
                 <div class="mb-3">
                     <label for="id_photographe" class="form-label">Photographe</label>
@@ -100,7 +94,7 @@ include "../../composants/sidebar.php"; // Inclusion de la barre latérale
                         <option value="" disabled selected>Choisir un photographe</option>
                         <?php while ($row = mysqli_fetch_assoc($result_photographes)): ?>
                             <option value="<?php echo $row['id_photographe']; ?>">
-                                <?php echo $row['nom']; ?>
+                                <?php echo htmlspecialchars($row['nom']); ?>
                             </option>
                         <?php endwhile; ?>
                     </select>
@@ -111,7 +105,7 @@ include "../../composants/sidebar.php"; // Inclusion de la barre latérale
                         <option value="" disabled selected>Choisir un client</option>
                         <?php while ($row = mysqli_fetch_assoc($result_clients)): ?>
                             <option value="<?php echo $row['id_client']; ?>">
-                                <?php echo $row['nom']; ?>
+                                <?php echo htmlspecialchars($row['nom']); ?>
                             </option>
                         <?php endwhile; ?>
                     </select>
@@ -141,12 +135,12 @@ include "../../composants/sidebar.php"; // Inclusion de la barre latérale
                 <?php if (mysqli_num_rows($result) > 0): ?>
                     <?php while ($row = mysqli_fetch_assoc($result)): ?>
                         <tr>
-                            <td><?php echo $row['id_seance']; ?></td>
-                            <td><?php echo $row['date_seance']; ?></td>
-                            <td><?php echo $row['heure']; ?></td>
-                            <td><?php echo $row['lieu']; ?></td>
-                            <td><?php echo $row['nom_photographe']; ?></td>
-                            <td><?php echo $row['nom']; ?></td>
+                            <td><?php echo htmlspecialchars($row['id_seance']); ?></td>
+                            <td><?php echo htmlspecialchars($row['date_seance']); ?></td>
+                            <td><?php echo htmlspecialchars($row['heure']); ?></td>
+                            <td><?php echo htmlspecialchars($row['lieu']); ?></td>
+                            <td><?php echo htmlspecialchars($row['photographe_nom']); ?></td>
+                            <td><?php echo htmlspecialchars($row['client_nom']); ?></td>
                             <td>
                                 <a href="edit_seance.php?id=<?php echo $row['id_seance']; ?>" class="btn btn-warning btn-sm">Modifier</a>
                                 <a href="delete_seance.php?id=<?php echo $row['id_seance']; ?>" class="btn btn-danger btn-sm">Supprimer</a>

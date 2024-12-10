@@ -3,37 +3,56 @@ include "../../login/connexion_bdd.php"; // Connexion à la base de données
 
 // Vérifier si la méthode de la requête est POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Récupération du fichier téléchargé
+    // Validation du fichier téléchargé
+    $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+    $max_file_size = 5 * 1024 * 1024; // 5 Mo
+
     $chemin_fichier_tmp = $_FILES['file']['tmp_name'];
-    $nom_fichier = $_FILES['file']['name'];
+    $nom_fichier = basename($_FILES['file']['name']);
+    $extension = strtolower(pathinfo($nom_fichier, PATHINFO_EXTENSION));
 
-    // Déplacement du fichier vers le dossier "images/"
-    $dossier_cible = "../../../ressources/images/";
-    $chemin_fichier = $dossier_cible . basename($nom_fichier);
-
-    // Vérifier si le fichier a été déplacé avec succès
-    if (move_uploaded_file($chemin_fichier_tmp, $chemin_fichier)) {
-        echo "<script>alert('Fichier uploadé avec succès !');</script>";
-    } else {
-        echo "<script>alert('Erreur lors de l\'upload du fichier.');</script>";
+    // Vérifier l'extension du fichier
+    if (!in_array($extension, $allowed_extensions)) {
+        echo "<script>alert('Extension de fichier non autorisée.');</script>";
+        exit;
     }
 
-    // Récupération de la résolution et du format
-    $resolution = $_POST['resolution'];
-    $format = pathinfo($chemin_fichier, PATHINFO_EXTENSION); // Récupération de l'extension du fichier
-    $id_seance = $_POST['id_seance'];
+    // Vérifier la taille du fichier
+    if ($_FILES['file']['size'] > $max_file_size) {
+        echo "<script>alert('Le fichier est trop volumineux. Maximum 5 Mo.');</script>";
+        exit;
+    }
 
-    // Insertion dans la base de données
-    $sql = "INSERT INTO Photo (chemin_fichier, resolution, format, id_seance) 
-            VALUES ('$chemin_fichier', '$resolution', '$format', '$id_seance')";
-    if (mysqli_query($conn, $sql)) {
-        echo "<script>alert('Photo enregistrée dans la base de données.');</script>";
+    // Déplacer le fichier vers le dossier cible
+    $dossier_cible = "../../../ressources/images/";
+    $chemin_fichier = $dossier_cible . $nom_fichier;
+
+    if (move_uploaded_file($chemin_fichier_tmp, $chemin_fichier)) {
+        // Nettoyer et valider les données du formulaire
+        $resolution = htmlspecialchars(trim($_POST['resolution']));
+        $id_seance = intval($_POST['id_seance']); // Conversion en entier pour sécurité
+
+        // Préparer la requête pour insérer dans la base de données
+        $sql = "INSERT INTO Photo (chemin_fichier, resolution, format, id_seance) VALUES (?, ?, ?, ?)";
+        $stmt = mysqli_prepare($conn, $sql);
+
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "sssi", $chemin_fichier, $resolution, $extension, $id_seance);
+            if (mysqli_stmt_execute($stmt)) {
+                echo "<script>alert('Photo enregistrée avec succès.');</script>";
+            } else {
+                echo "<script>alert('Erreur lors de l\'enregistrement dans la base de données.');</script>";
+            }
+            mysqli_stmt_close($stmt);
+        } else {
+            echo "<script>alert('Erreur de préparation de la requête.');</script>";
+        }
     } else {
-        echo "<script>alert('Erreur lors de l\'enregistrement : " . mysqli_error($conn) . "');</script>";
+        echo "<script>alert('Erreur lors du déplacement du fichier.');</script>";
     }
 }
 
-// Récupération des séances pour le formulaire
+// Récupérer les séances pour le formulaire
 $sql2 = "SELECT id_seance, lieu FROM Seance";
 $result2 = mysqli_query($conn, $sql2);
 ?>
@@ -70,7 +89,7 @@ include "../../composants/navbar.php"; // Inclusion de la barre de navigation
                     <label for="id_seance" class="form-label">Sélectionnez une séance :</label>
                     <select name="id_seance" id="id_seance" class="form-select" required>
                         <?php foreach ($result2 as $row2): ?>
-                            <option value="<?php echo $row2['id_seance']; ?>"><?php echo $row2['lieu']; ?></option>
+                            <option value="<?php echo $row2['id_seance']; ?>"><?php echo htmlspecialchars($row2['lieu']); ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -102,15 +121,15 @@ include "../../composants/navbar.php"; // Inclusion de la barre de navigation
                 <?php
                 $sql = "SELECT * FROM Photo";
                 $result = mysqli_query($conn, $sql);
-                if ($result->num_rows > 0):
+                if ($result && $result->num_rows > 0):
                     while ($row = $result->fetch_assoc()):
                         ?>
                         <tr>
-                            <td><?php echo $row['id_photo']; ?></td>
-                            <td><?php echo $row['chemin_fichier']; ?></td>
-                            <td><?php echo $row['resolution']; ?></td>
-                            <td><?php echo $row['format']; ?></td>
-                            <td><?php echo $row['id_seance']; ?></td>
+                            <td><?php echo htmlspecialchars($row['id_photo']); ?></td>
+                            <td><?php echo htmlspecialchars($row['chemin_fichier']); ?></td>
+                            <td><?php echo htmlspecialchars($row['resolution']); ?></td>
+                            <td><?php echo htmlspecialchars($row['format']); ?></td>
+                            <td><?php echo htmlspecialchars($row['id_seance']); ?></td>
                             <td>
                                 <a href="edit_photo.php?id=<?php echo $row['id_photo']; ?>" class="btn btn-warning btn-sm">Modifier</a>
                                 <a href="delete_photo.php?id=<?php echo $row['id_photo']; ?>" class="btn btn-danger btn-sm">Supprimer</a>
@@ -118,7 +137,7 @@ include "../../composants/navbar.php"; // Inclusion de la barre de navigation
                         </tr>
                     <?php endwhile; else: ?>
                     <tr>
-                        <td colspan="5" class="text-center">Aucune photo trouvée</td>
+                        <td colspan="6" class="text-center">Aucune photo trouvée</td>
                     </tr>
                 <?php endif; ?>
                 </tbody>
@@ -134,6 +153,5 @@ include "../../composants/navbar.php"; // Inclusion de la barre de navigation
 </html>
 
 <?php
-// Fermer la connexion à la base de données
-mysqli_close($conn);
+mysqli_close($conn); // Fermer la connexion à la base de données
 ?>

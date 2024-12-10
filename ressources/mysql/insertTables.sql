@@ -72,29 +72,28 @@ INSERT INTO Transaction (montant, date_transaction, type_transaction, id_seance)
                                                                                      (275.00, '2024-12-10', 'facture', 8),
                                                                                      (275.00, '2024-12-11', 'paiement', 8);
 
-
--- Peuplement de la table Utilisateurs à partir des emails de Client et Photographe
+-- Peuplement de la table Utilisateurs avec des mots de passe hachés
 INSERT INTO Utilisateurs (email, mot_de_passe, role) VALUES
-                                                         ('jean.dupont@example.com', 'password_1', 'client'),
-                                                         ('marie.curie@example.com', 'password_2', 'client'),
-                                                         ('alice.martin@example.com', 'password_3', 'client'),
-                                                         ('paul.durand@example.com', 'password_4', 'client'),
-                                                         ('julie.robert@example.com', 'password_5', 'client'),
-                                                         ('martin.leroy@example.com', 'password_6', 'client'),
-                                                         ('emma.petit@example.com', 'password_7', 'client'),
-                                                         ('lucas.fontaine@example.com', 'password_8', 'client'),
-                                                         ('sophie.lambert@example.com', 'password_9', 'client'),
-                                                         ('victor.hugo@example.com', 'password_10', 'client'),
-                                                         ('camille.legrand@example.com', 'password_11', 'photographe'),
-                                                         ('lucas.morel@example.com', 'password_12', 'photographe'),
-                                                         ('emma.lefebvre@example.com', 'password_13', 'photographe'),
-                                                         ('sophie.bernard@example.com', 'password_14', 'photographe'),
-                                                         ('victor.garnier@example.com', 'password_15', 'photographe'),
-                                                         ('julie.martin@example.com', 'password_16', 'photographe'),
-                                                         ('paul.richard@example.com', 'password_17', 'photographe'),
-                                                         ('alice.durand@example.com', 'password_18', 'photographe'),
-                                                         ('marie.faure@example.com', 'password_19', 'photographe'),
-                                                         ('jean.blanc@example.com', 'password_20', 'photographe'),
-                                                         ('admin@example.com','password_21','admin');
+                                                         ('jean.dupont@example.com', '$2b$12$WzNhZa8WfPQOTun9ccsOqOzybGfFYvn9gkn3sgCw6ER5rrjQ8y01m', 'client'),
+                                                         ('marie.curie@example.com', '$2b$12$KjA9xuMPTQLxkF6Q4Hfi5UM6ijwphz1RJ2ihzK3O41pzXbKbs7mjC', 'client'),
+                                                         ('alice.martin@example.com', '$2b$12$YxB66ZmGGGGH9u4ErpM6pCnbB5T0hXPUm9O0QWezbdM6XOBtFfpiK', 'client'),
+                                                         ('paul.durand@example.com', '$2b$12$FpXh4HzfQzxwCwvVZmN80mXHoFbY4wZhrApHqG1dOHezAZySb53Ie', 'client'),
+                                                         ('julie.robert@example.com', '$2b$12$knlDTX1VSOIgZ8rxHfggmQdd3DrrhzFyfemfsA1HEzfg2z7pfXKZm', 'client'),
+                                                         ('martin.leroy@example.com', '$2b$12$SO4wdgTpCOT2h3Xvl1f8uOtf9g2p8eGrhlpvoU0jm5N6l7HY3YQWq', 'client'),
+                                                         ('emma.petit@example.com', '$2b$12$NJWjP8rHG5DrKlHdeAu3ONhMv8y5JXbDTsBDgXH7qbVjtA0t/7w5y', 'client'),
+                                                         ('lucas.fontaine@example.com', '$2b$12$ItFx5CZ3u2g8hCmTrjVGzmn1FE8m0FD3R.XgmYOQmnkqqLgxbjR6C', 'client'),
+                                                         ('sophie.lambert@example.com', '$2b$12$TuUrU7XAsNl/ba5A26EmImf/Njs1x1kgSjyF3KOXv9f38bCNFADaW', 'client'),
+                                                         ('victor.hugo@example.com', '$2b$12$WxMwD.eJ6erXpaSlVeDccMnMLmEoZ5ShAMGJ25NzVf9.svqTiyT/C', 'client'),
+                                                         ('camille.legrand@example.com', '$2b$12$YW9US5wz6mQCNjjSAAFGjYOK7UtT9d66IE.tq70eFhH2RY82ybEGC', 'photographe'),
+                                                         ('lucas.morel@example.com', '$2b$12$S5nN0q8yytrXv0kDgDKV9YkAYvS32ShnOtjcmFfpu.Wtv.t7nSlfu', 'photographe'),
+                                                         ('emma.lefebvre@example.com', '$2b$12$RgFWkpMLFz8S1yVwwgYlNiikYxeVSoZP4RR.Nq9cC0rbX3z6msm9u', 'photographe'),
+                                                         ('sophie.bernard@example.com', '$2b$12$Q6B7J1FjfiQDE8ZFs6M2fQX37JRs16F9KvQT9wnwYg1zz79J9BqZq', 'photographe'),
+                                                         ('victor.garnier@example.com', '$2b$12$neqa0V.vrZzgs3ntJY4kmmMTq56qZXx7q0pOWMNMP8U8mrX7om.sq', 'photographe'),
+                                                         ('julie.martin@example.com', '$2b$12$zU7xyvTxT1t9pA9eQThyn7pxfwXsmpOOvQHaA9z9HhfaIhvXg4Fvq', 'photographe'),
+                                                         ('paul.richard@example.com', '$2b$12$8O9xFT7fVfDdyxMwb5pLgSyPOhbbNE9H9ALfgYhWp6yIVF/ZlYx5u', 'photographe'),
+                                                         ('alice.durand@example.com', '$2b$12$OOVHk5ppOSItu/M5djk6xu9B8T2HfVrFz0Xz1K6X2O51qUM8fubf6', 'photographe'),
+                                                         ('marie.faure@example.com', '$2b$12$z9z7HZbmYhVJddpXBGUacHt0QlUwVj89Jkpi64z3V2n0nmfGb30.m', 'photographe'),
+                                                         ('jean.blanc@example.com', '$2b$12$ZMyhVeCK3uFeL9osDtTZ2D9vZPfgQjz1imIaXI4hzA9k3yy9fZynG', 'photographe'),
+                                                         ('admin@example.com', '$2b$12$06Sz.P9kDP4nsq9B0GT2PeDLpeAX9B7DkY6rD9v8b0BoVlmOU6YvO', 'admin');
 
 -- Peuplement de la table Effectué sera fera directement grace au clés des table de références

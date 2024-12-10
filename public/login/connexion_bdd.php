@@ -8,10 +8,10 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Informations de connexion à la base de données
-$servername = 'mysql.ensinfo.sciences.univ-nantes.prive';
-$username = 'E249694G';
-$password = 'F02ARU6H';
-$database = 'E249694G';
+$servername = 'localhost';
+$username = 'root';
+$password = '';
+$database = 'PicturMe';
 
 // Établit la connexion avec la base de données
 $conn = mysqli_connect($servername, $username, $password, $database);

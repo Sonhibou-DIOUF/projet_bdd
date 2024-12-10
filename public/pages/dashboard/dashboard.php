@@ -13,16 +13,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $mot_de_passe = $_POST['mot_de_passe'];
 
-    // Insertion des données dans la table Utilisateurs avec le rôle d'admin
-    $sql = "INSERT INTO Utilisateurs (email, mot_de_passe, role) VALUES ('$email', '$mot_de_passe', 'admin')";
-    if (mysqli_query($conn, $sql)) {
-        // Message de succès en cas d'insertion réussie
-        $_SESSION['success'] = 'Admin ajouté avec succès';
+    // Préparation de la requête SQL sécurisée pour ajouter un nouvel admin
+    $sql = "INSERT INTO Utilisateurs (email, mot_de_passe, role) VALUES (?, ?, 'admin')";
+    $stmt = mysqli_prepare($conn, $sql);
+
+    if ($stmt) {
+        // Lier les paramètres
+        mysqli_stmt_bind_param($stmt, "ss", $email, $mot_de_passe);
+
+        // Exécuter la requête préparée
+        if (mysqli_stmt_execute($stmt)) {
+            // Message de succès en cas d'insertion réussie
+            $_SESSION['success'] = 'Admin ajouté avec succès';
+        } else {
+            // Message d'erreur en cas d'échec de l'insertion
+            $_SESSION['error'] = 'Erreur lors de l\'ajout de l\'admin';
+        }
+
+        // Fermer la requête préparée
+        mysqli_stmt_close($stmt);
     } else {
-        // Message d'erreur en cas d'échec de l'insertion
-        $_SESSION['error'] = 'Erreur lors de l\'ajout de l\'admin';
+        // Message d'erreur si la préparation de la requête échoue
+        $_SESSION['error'] = 'Une erreur s\'est produite lors de la préparation de la requête.';
     }
 }
+
+// Fermer la connexion à la base de données
+mysqli_close($conn);
 ?>
 
 <!-- Main Content -->

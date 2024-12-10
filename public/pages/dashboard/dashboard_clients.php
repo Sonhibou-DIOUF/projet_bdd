@@ -12,23 +12,64 @@ if (!isset($_SESSION['id_client'])) {
 
 $id_client = $_SESSION['id_client'];
 
-// Récupérer les informations du client depuis la base de données
-$sql_utilisateur = "select email from Utilisateurs where id_utilisateur=$id_client"; // Correction sur la base de données
-$result_utilisateurs = mysqli_query($conn, $sql_utilisateur);
-$utilisateurs = mysqli_fetch_assoc($result_utilisateurs);
-$sql_client = "SELECT * FROM Client WHERE email = '$utilisateurs[email]'";
-$result_client = mysqli_query($conn, $sql_client);
-$client = mysqli_fetch_assoc($result_client);
-$id_client= $client['id_client'];
+// Récupérer les informations de l'utilisateur
+$sql_utilisateur = "SELECT email FROM Utilisateurs WHERE id_utilisateur = ?";
+$stmt_utilisateur = mysqli_prepare($conn, $sql_utilisateur);
+
+if ($stmt_utilisateur) {
+    mysqli_stmt_bind_param($stmt_utilisateur, "i", $id_client);
+    mysqli_stmt_execute($stmt_utilisateur);
+    $result_utilisateurs = mysqli_stmt_get_result($stmt_utilisateur);
+    $utilisateurs = mysqli_fetch_assoc($result_utilisateurs);
+    mysqli_stmt_close($stmt_utilisateur);
+} else {
+    die("Erreur lors de la récupération des informations utilisateur.");
+}
+
+// Récupérer les informations du client
+$sql_client = "SELECT * FROM Client WHERE email = ?";
+$stmt_client = mysqli_prepare($conn, $sql_client);
+
+if ($stmt_client) {
+    mysqli_stmt_bind_param($stmt_client, "s", $utilisateurs['email']);
+    mysqli_stmt_execute($stmt_client);
+    $result_client = mysqli_stmt_get_result($stmt_client);
+    $client = mysqli_fetch_assoc($result_client);
+    mysqli_stmt_close($stmt_client);
+} else {
+    die("Erreur lors de la récupération des informations client.");
+}
 
 // Récupérer les séances du client
-$sql_seances = "SELECT * FROM Seance JOIN Client ON Seance.id_client = Client.id_client JOIN Photographe ON Seance.id_photographe = Photographe.id_photographe 
-WHERE Client.id_client=$id_client ORDER BY date_seance DESC";
-$result_seances = mysqli_query($conn, $sql_seances);
+$sql_seances = "SELECT * FROM Seance 
+                JOIN Client ON Seance.id_client = Client.id_client 
+                JOIN Photographe ON Seance.id_photographe = Photographe.id_photographe 
+                WHERE Client.id_client = ? 
+                ORDER BY date_seance DESC";
+$stmt_seances = mysqli_prepare($conn, $sql_seances);
+
+if ($stmt_seances) {
+    mysqli_stmt_bind_param($stmt_seances, "i", $client['id_client']);
+    mysqli_stmt_execute($stmt_seances);
+    $result_seances = mysqli_stmt_get_result($stmt_seances);
+} else {
+    die("Erreur lors de la récupération des séances.");
+}
 
 // Récupérer les photos du client
-$sql_photos = "select * from  Seance JOIN Photo ON Seance.id_seance = Photo.id_seance WHERE Seance.id_client = '$id_client' ORDER BY date_seance DESC";
-$result_photos = mysqli_query($conn, $sql_photos);
+$sql_photos = "SELECT * FROM Seance 
+               JOIN Photo ON Seance.id_seance = Photo.id_seance 
+               WHERE Seance.id_client = ? 
+               ORDER BY date_seance DESC";
+$stmt_photos = mysqli_prepare($conn, $sql_photos);
+
+if ($stmt_photos) {
+    mysqli_stmt_bind_param($stmt_photos, "i", $client['id_client']);
+    mysqli_stmt_execute($stmt_photos);
+    $result_photos = mysqli_stmt_get_result($stmt_photos);
+} else {
+    die("Erreur lors de la récupération des photos.");
+}
 ?>
 
 <!-- Main Content -->
@@ -39,10 +80,10 @@ $result_photos = mysqli_query($conn, $sql_photos);
     <div class="card mb-4">
         <div class="card-header">Informations du Client</div>
         <div class="card-body">
-            <p><strong>Nom :</strong> <?php echo $client['nom']; ?></p>
-            <p><strong>Email :</strong> <?php echo $client['email']; ?></p>
-            <p><strong>Téléphone :</strong> <?php echo $client['telephone']; ?></p>
-            <p><strong>Adresse :</strong> <?php echo $client['adresse']; ?></p>
+            <p><strong>Nom :</strong> <?php echo htmlspecialchars($client['nom']); ?></p>
+            <p><strong>Email :</strong> <?php echo htmlspecialchars($client['email']); ?></p>
+            <p><strong>Téléphone :</strong> <?php echo htmlspecialchars($client['telephone']); ?></p>
+            <p><strong>Adresse :</strong> <?php echo htmlspecialchars($client['adresse']); ?></p>
             <div class="text-center">
                 <a href="edit_client_by_client.php?id=<?php echo $client['id_client']; ?>" class="btn btn-warning">Modifier Profil</a>
             </div>
@@ -66,10 +107,10 @@ $result_photos = mysqli_query($conn, $sql_photos);
                 <?php if (mysqli_num_rows($result_seances) > 0): ?>
                     <?php while ($row = mysqli_fetch_assoc($result_seances)): ?>
                         <tr>
-                            <td><?php echo $row['date_seance']; ?></td>
-                            <td><?php echo $row['lieu']; ?></td>
-                            <td><?php echo $row['heure']; ?></td>
-                            <td><?php echo $row['nom']; ?></td>
+                            <td><?php echo htmlspecialchars($row['date_seance']); ?></td>
+                            <td><?php echo htmlspecialchars($row['lieu']); ?></td>
+                            <td><?php echo htmlspecialchars($row['heure']); ?></td>
+                            <td><?php echo htmlspecialchars($row['nom']); ?></td>
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
@@ -90,7 +131,7 @@ $result_photos = mysqli_query($conn, $sql_photos);
                 <?php if (mysqli_num_rows($result_photos) > 0): ?>
                     <?php while ($photo = mysqli_fetch_assoc($result_photos)): ?>
                         <div class="col-md-4 mb-3">
-                            <img src="../../uploads/<?php echo $photo['chemin_fichier']; ?>" alt="Photo" class="img-fluid">
+                            <img src="../../uploads/<?php echo htmlspecialchars($photo['chemin_fichier']); ?>" alt="Photo" class="img-fluid">
                         </div>
                     <?php endwhile; ?>
                 <?php else: ?>
@@ -105,6 +146,10 @@ $result_photos = mysqli_query($conn, $sql_photos);
 </html>
 
 <?php
+// Fermer les requêtes préparées restantes
+if ($stmt_seances) mysqli_stmt_close($stmt_seances);
+if ($stmt_photos) mysqli_stmt_close($stmt_photos);
+
 // Fermeture de la connexion à la base de données
 mysqli_close($conn);
 ?>

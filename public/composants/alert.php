@@ -23,4 +23,16 @@ if (isset($_SESSION['success'])) {
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>';
 }
+
+    // JavaScript pour supprimer le message après 1 seconde
+    echo "<script>
+        setTimeout(function() {
+            document.getElementById('message').style.display = 'none';
+        }, 1000); // 1000 millisecondes = 1 seconde
+    </script>";
+
+    // Supprimer la variable de session après 1 seconde côté serveur
+    unset($_SESSION['message']);
+
+
 ?>

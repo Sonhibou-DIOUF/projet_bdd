@@ -7,58 +7,88 @@ include "../composants/navbar.php";
 
 // Vérification de la méthode de la requête HTTP
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Récupération des données du formulaire
-    $nom = $_POST['nom'];
-    $email = $_POST['email'];
-    $telephone = $_POST['telephone'];
-    $mot_de_passe = $_POST['mot_de_passe'];
-    $adresse = $_POST['adresse'];
+    // Récupération et validation des données du formulaire
+    $nom = trim($_POST['nom']);
+    $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
+    $telephone = trim($_POST['telephone']);
+    $mot_de_passe = password_hash(trim($_POST['mot_de_passe']), PASSWORD_BCRYPT); // Hachage du mot de passe
+    $adresse = isset($_POST['adresse']) ? trim($_POST['adresse']) : null;
+    $specialite = isset($_POST['specialite']) ? trim($_POST['specialite']) : null;
     $role = $_POST['role']; // Rôle choisi : client ou photographe
+
+    if (!$email) {
+        $_SESSION['error'] = "Email invalide.";
+        header('location: inscription.php');
+        exit();
+    }
 
     // Vérification du rôle choisi
     if ($role == "client") {
-        // Insertion des données dans la table Client
-        $sql_client = "INSERT INTO Client (nom, email, telephone, adresse) VALUES ('$nom', '$email', '$telephone', '$adresse')";
-        if (mysqli_query($conn, $sql_client)) {
+        // Prépare et exécute l'insertion des données dans la table Client
+        $sql_client = "INSERT INTO Client (nom, email, telephone, adresse) VALUES (?, ?, ?, ?)";
+        $stmt_client = mysqli_prepare($conn, $sql_client);
+        mysqli_stmt_bind_param($stmt_client, "ssss", $nom, $email, $telephone, $adresse);
+
+        if (mysqli_stmt_execute($stmt_client)) {
             // Récupération de l'identifiant du client inséré
             $id_client = mysqli_insert_id($conn);
+
             // Insertion des données dans la table utilisateurs
-            $sql_utilisateur = "INSERT INTO utilisateurs (email, mot_de_passe, role) VALUES ('$email', '$mot_de_passe', 'client')";
-            mysqli_query($conn, $sql_utilisateur);
-            // Message de succès et redirection vers le tableau de bord des clients
+            $sql_utilisateur = "INSERT INTO utilisateurs (email, mot_de_passe, role) VALUES (?, ?, 'client')";
+            $stmt_utilisateur = mysqli_prepare($conn, $sql_utilisateur);
+            mysqli_stmt_bind_param($stmt_utilisateur, "ss", $email, $mot_de_passe);
+            mysqli_stmt_execute($stmt_utilisateur);
+
+            // Message de succès et redirection
             $_SESSION['message'] = "Compte client créé avec succès !";
             $_SESSION['id_client'] = $id_client;
             header('location: ../pages/dashboard/dashboard_clients.php');
+            exit();
         } else {
             // Message d'erreur en cas d'échec de l'insertion
             $_SESSION['error'] = "Erreur lors de la création du compte client.";
+            header('location: inscription.php');
+            exit();
         }
     } elseif ($role == "photographe") {
-        // Récupération de la spécialité pour le photographe
-        $specialite = $_POST['specialite'];
+        // Prépare et exécute l'insertion des données dans la table Photographe
+        $sql_photographe = "INSERT INTO Photographe (nom, email, telephone, specialite) VALUES (?, ?, ?, ?)";
+        $stmt_photographe = mysqli_prepare($conn, $sql_photographe);
+        mysqli_stmt_bind_param($stmt_photographe, "ssss", $nom, $email, $telephone, $specialite);
 
-        // Insertion des données dans la table Photographe
-        $sql_photographe = "INSERT INTO Photographe (nom, email, telephone, specialite) VALUES ('$nom', '$email', '$telephone', '$specialite')";
-        if (mysqli_query($conn, $sql_photographe)) {
+        if (mysqli_stmt_execute($stmt_photographe)) {
             // Récupération de l'identifiant du photographe inséré
             $id_photographe = mysqli_insert_id($conn);
+
             // Insertion des données dans la table utilisateurs
-            $sql_utilisateur = "INSERT INTO utilisateurs (email, mot_de_passe, role) VALUES ('$email', '$mot_de_passe', 'photographe')";
-            mysqli_query($conn, $sql_utilisateur);
-            // Message de succès et redirection vers le tableau de bord des photographes
+            $sql_utilisateur = "INSERT INTO utilisateurs (email, mot_de_passe, role) VALUES (?, ?, 'photographe')";
+            $stmt_utilisateur = mysqli_prepare($conn, $sql_utilisateur);
+            mysqli_stmt_bind_param($stmt_utilisateur, "ss", $email, $mot_de_passe);
+            mysqli_stmt_execute($stmt_utilisateur);
+
+            // Message de succès et redirection
             $_SESSION['message'] = "Compte photographe créé avec succès !";
             $_SESSION['id_photographe'] = $id_photographe;
             header('location: ../pages/dashboard/dashboard_photographes.php');
+            exit();
         } else {
             // Message d'erreur en cas d'échec de l'insertion
             $_SESSION['error'] = "Erreur lors de la création du compte photographe.";
+            header('location: inscription.php');
+            exit();
         }
     } else {
         // Message d'erreur en cas de rôle invalide
         $_SESSION['error'] = "Rôle invalide.";
+        header('location: inscription.php');
+        exit();
     }
 }
+
+// Ferme la connexion à la base de données
+mysqli_close($conn);
 ?>
+
 
 <div class="container mt-5">
     <h1 class="text-center mb-4">Inscription</h1>

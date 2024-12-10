@@ -3,19 +3,45 @@ include "../../login/connexion_bdd.php"; // Fichier de connexion à la base de d
 
 // Gestion de l'ajout d'une transaction
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Récupération des données du formulaire
+    // Récupération et validation des données
     $montant = $_POST['montant'];
     $date_transaction = $_POST['date_transaction'];
     $type_transaction = $_POST['type_transaction'];
-    $id_seance = $_POST['id_seance']; // Récupérer l'id_seance depuis le formulaire
+    $id_seance = $_POST['id_seance'];
 
-    // Requête d'insertion
+    // Validation des données (côté serveur)
+    if (!in_array($type_transaction, ['paiement', 'facture'])) {
+        die("Type de transaction non valide.");
+    }
+    if (!is_numeric($montant) || $montant <= 0) {
+        die("Montant invalide.");
+    }
+
+    // Vérifiez que l'ID de la séance existe
+    $sql_check = "SELECT 1 FROM Seance WHERE id_seance = ?";
+    $stmt_check = mysqli_prepare($conn, $sql_check);
+    mysqli_stmt_bind_param($stmt_check, "i", $id_seance);
+    mysqli_stmt_execute($stmt_check);
+    mysqli_stmt_store_result($stmt_check);
+    if (mysqli_stmt_num_rows($stmt_check) === 0) {
+        die("ID de séance invalide.");
+    }
+    mysqli_stmt_close($stmt_check);
+
+    // Requête d'insertion sécurisée
     $sql = "INSERT INTO Transaction (montant, date_transaction, type_transaction, id_seance) 
-            VALUES ('$montant', '$date_transaction', '$type_transaction', '$id_seance')";
-    if (mysqli_query($conn, $sql)) {
-        echo "<script>alert('Transaction ajoutée avec succès.');</script>";
+            VALUES (?, ?, ?, ?)";
+    $stmt = mysqli_prepare($conn, $sql);
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "dssi", $montant, $date_transaction, $type_transaction, $id_seance);
+        if (mysqli_stmt_execute($stmt)) {
+            echo "<script>alert('Transaction ajoutée avec succès.');</script>";
+        } else {
+            echo "<script>alert('Erreur : " . mysqli_error($conn) . "');</script>";
+        }
+        mysqli_stmt_close($stmt);
     } else {
-        echo "<script>alert('Erreur : " . mysqli_error($conn) . "');</script>";
+        echo "<script>alert('Erreur de préparation de la requête.');</script>";
     }
 }
 
@@ -68,11 +94,13 @@ include "../../composants/sidebar.php"; // Inclusion de la barre latérale
                     <select id="id_seance" name="id_seance" class="form-select" required>
                         <option value="" disabled selected>Choisissez une Séance</option>
                         <?php
-                        $sql = "SELECT * FROM Seance";
+                        $sql = "SELECT id_seance, date_seance, id_client FROM Seance";
                         $result = mysqli_query($conn, $sql);
                         if ($result->num_rows > 0):
                             while ($row = $result->fetch_assoc()):
-                                echo '<option value="' . $row['id_seance'] . '">' . $row["date_seance"] . ' du client ' . $row["id_client"] . '</option>';
+                                echo '<option value="' . htmlspecialchars($row['id_seance'], ENT_QUOTES, 'UTF-8') . '">'
+                                    . htmlspecialchars($row["date_seance"], ENT_QUOTES, 'UTF-8')
+                                    . ' du client ' . htmlspecialchars($row["id_client"], ENT_QUOTES, 'UTF-8') . '</option>';
                             endwhile;
                         endif;
                         ?>
@@ -103,14 +131,14 @@ include "../../composants/sidebar.php"; // Inclusion de la barre latérale
                 <?php if ($result_transactions->num_rows > 0): ?>
                     <?php while ($row = $result_transactions->fetch_assoc()): ?>
                         <tr>
-                            <td><?php echo $row['id_transaction']; ?></td>
-                            <td><?php echo $row['montant']; ?> €</td>
-                            <td><?php echo $row['date_transaction']; ?></td>
-                            <td><?php echo $row['type_transaction']; ?></td>
+                            <td><?php echo htmlspecialchars($row['id_transaction'], ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td><?php echo htmlspecialchars($row['montant'], ENT_QUOTES, 'UTF-8'); ?> €</td>
+                            <td><?php echo htmlspecialchars($row['date_transaction'], ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td><?php echo htmlspecialchars($row['type_transaction'], ENT_QUOTES, 'UTF-8'); ?></td>
                             <td>
-                                <?php 
+                                <?php
                                 if ($row['date_seance']) {
-                                    echo $row['date_seance'] . ' ' . $row['lieu_seance']; 
+                                    echo htmlspecialchars($row['date_seance'], ENT_QUOTES, 'UTF-8') . ' ' . htmlspecialchars($row['lieu_seance'], ENT_QUOTES, 'UTF-8');
                                 } else {
                                     echo "Aucune séance associée";
                                 }

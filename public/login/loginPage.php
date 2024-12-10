@@ -4,6 +4,7 @@ include "connexion_bdd.php";
 // Inclusion des composants de l'en-tête et de la barre de navigation
 include "../composants/header.php";
 include "../composants/navbar.php";
+include "../composants/alert.php";
 
 // Vérifie si l'utilisateur est déjà connecté
 if (isset($_SESSION['email'])) {
