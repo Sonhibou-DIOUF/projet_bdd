@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $id_client = mysqli_insert_id($conn);
 
             // Insertion des données dans la table utilisateurs
-            $sql_utilisateur = "INSERT INTO utilisateurs (email, mot_de_passe, role) VALUES (?, ?, 'client')";
+            $sql_utilisateur = "INSERT INTO Utilisateurs (email, mot_de_passe, role) VALUES (?, ?, 'client')";
             $stmt_utilisateur = mysqli_prepare($conn, $sql_utilisateur);
             mysqli_stmt_bind_param($stmt_utilisateur, "ss", $email, $mot_de_passe);
             mysqli_stmt_execute($stmt_utilisateur);
