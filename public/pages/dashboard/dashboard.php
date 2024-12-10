@@ -13,13 +13,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $mot_de_passe = $_POST['mot_de_passe'];
 
+    // Hachage du mot de passe
+    $mot_de_passe_hash = password_hash($mot_de_passe, PASSWORD_BCRYPT);
+
     // Préparation de la requête SQL sécurisée pour ajouter un nouvel admin
     $sql = "INSERT INTO Utilisateurs (email, mot_de_passe, role) VALUES (?, ?, 'admin')";
     $stmt = mysqli_prepare($conn, $sql);
 
     if ($stmt) {
         // Lier les paramètres
-        mysqli_stmt_bind_param($stmt, "ss", $email, $mot_de_passe);
+        mysqli_stmt_bind_param($stmt, "ss", $email, $mot_de_passe_hash);
 
         // Exécuter la requête préparée
         if (mysqli_stmt_execute($stmt)) {

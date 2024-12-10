@@ -74,26 +74,37 @@ INSERT INTO Transaction (montant, date_transaction, type_transaction, id_seance)
 
 -- Peuplement de la table Utilisateurs avec des mots de passe hachés
 INSERT INTO Utilisateurs (email, mot_de_passe, role) VALUES
-                                                         ('jean.dupont@example.com', '$2b$12$WzNhZa8WfPQOTun9ccsOqOzybGfFYvn9gkn3sgCw6ER5rrjQ8y01m', 'client'),
-                                                         ('marie.curie@example.com', '$2b$12$KjA9xuMPTQLxkF6Q4Hfi5UM6ijwphz1RJ2ihzK3O41pzXbKbs7mjC', 'client'),
-                                                         ('alice.martin@example.com', '$2b$12$YxB66ZmGGGGH9u4ErpM6pCnbB5T0hXPUm9O0QWezbdM6XOBtFfpiK', 'client'),
-                                                         ('paul.durand@example.com', '$2b$12$FpXh4HzfQzxwCwvVZmN80mXHoFbY4wZhrApHqG1dOHezAZySb53Ie', 'client'),
-                                                         ('julie.robert@example.com', '$2b$12$knlDTX1VSOIgZ8rxHfggmQdd3DrrhzFyfemfsA1HEzfg2z7pfXKZm', 'client'),
-                                                         ('martin.leroy@example.com', '$2b$12$SO4wdgTpCOT2h3Xvl1f8uOtf9g2p8eGrhlpvoU0jm5N6l7HY3YQWq', 'client'),
-                                                         ('emma.petit@example.com', '$2b$12$NJWjP8rHG5DrKlHdeAu3ONhMv8y5JXbDTsBDgXH7qbVjtA0t/7w5y', 'client'),
-                                                         ('lucas.fontaine@example.com', '$2b$12$ItFx5CZ3u2g8hCmTrjVGzmn1FE8m0FD3R.XgmYOQmnkqqLgxbjR6C', 'client'),
-                                                         ('sophie.lambert@example.com', '$2b$12$TuUrU7XAsNl/ba5A26EmImf/Njs1x1kgSjyF3KOXv9f38bCNFADaW', 'client'),
-                                                         ('victor.hugo@example.com', '$2b$12$WxMwD.eJ6erXpaSlVeDccMnMLmEoZ5ShAMGJ25NzVf9.svqTiyT/C', 'client'),
-                                                         ('camille.legrand@example.com', '$2b$12$YW9US5wz6mQCNjjSAAFGjYOK7UtT9d66IE.tq70eFhH2RY82ybEGC', 'photographe'),
-                                                         ('lucas.morel@example.com', '$2b$12$S5nN0q8yytrXv0kDgDKV9YkAYvS32ShnOtjcmFfpu.Wtv.t7nSlfu', 'photographe'),
-                                                         ('emma.lefebvre@example.com', '$2b$12$RgFWkpMLFz8S1yVwwgYlNiikYxeVSoZP4RR.Nq9cC0rbX3z6msm9u', 'photographe'),
-                                                         ('sophie.bernard@example.com', '$2b$12$Q6B7J1FjfiQDE8ZFs6M2fQX37JRs16F9KvQT9wnwYg1zz79J9BqZq', 'photographe'),
-                                                         ('victor.garnier@example.com', '$2b$12$neqa0V.vrZzgs3ntJY4kmmMTq56qZXx7q0pOWMNMP8U8mrX7om.sq', 'photographe'),
-                                                         ('julie.martin@example.com', '$2b$12$zU7xyvTxT1t9pA9eQThyn7pxfwXsmpOOvQHaA9z9HhfaIhvXg4Fvq', 'photographe'),
-                                                         ('paul.richard@example.com', '$2b$12$8O9xFT7fVfDdyxMwb5pLgSyPOhbbNE9H9ALfgYhWp6yIVF/ZlYx5u', 'photographe'),
-                                                         ('alice.durand@example.com', '$2b$12$OOVHk5ppOSItu/M5djk6xu9B8T2HfVrFz0Xz1K6X2O51qUM8fubf6', 'photographe'),
-                                                         ('marie.faure@example.com', '$2b$12$z9z7HZbmYhVJddpXBGUacHt0QlUwVj89Jkpi64z3V2n0nmfGb30.m', 'photographe'),
-                                                         ('jean.blanc@example.com', '$2b$12$ZMyhVeCK3uFeL9osDtTZ2D9vZPfgQjz1imIaXI4hzA9k3yy9fZynG', 'photographe'),
-                                                         ('admin@example.com', '$2b$12$06Sz.P9kDP4nsq9B0GT2PeDLpeAX9B7DkY6rD9v8b0BoVlmOU6YvO', 'admin');
+    ( 'jean.dupont@example.com', '$2y$10$F1QmbT9M74jnL3nYU2fZF.Bl3TSsUVkrNBAlK46YK2.R2intAXpeG', 'client'),
+    ( 'marie.curie@example.com', '$2y$10$c5CoU47pzp0DFlzoQB3XY.TLz0p.bbgU7xkm2btxqlyh9X3gI7Nnq', 'client'),
+    ( 'alice.martin@example.com', '$2y$10$yRzRPK7AUlk.g34N0vG7EOEV8efKtp8uJyeRy0S6kSYMHBMV1GK/a', 'client'),
+    ( 'paul.durand@example.com', '$2y$10$K8OPxDMBzDXMsf6WDfFf3uu/YXLNPq22JGje6UEq4kJLMikhgYdjK', 'client'),
+    ( 'julie.robert@example.com', '$2y$10$Q0EFX.cRzfGmvPR/WTdwU.60gxYK7em5DUOW4vMl9ZnwMnPYMZ626', 'client'),
+    ( 'martin.leroy@example.com', '$2y$10$krJGgflbXM95o6HaqXaKce/QuHjEryOdNiHHgTJ.OB6EEt5chXWva', 'client'),
+    ( 'emma.petit@example.com', '$2y$10$ZBL5lGkasaQwjS5.IuWrAea0oqLgP0E3Mv/y5beMuJ4hcCa2vKRmu', 'client'),
+    ( 'lucas.fontaine@example.com', '$2y$10$F5Gj2U61EJuT.xyIVFbzM.eMFpXA34xZtYt/xEbQxnEO0q2vSD6EO', 'client'),
+    ( 'sophie.lambert@example.com', '$2y$10$K9hSMnCWoes5Z7ftOsUX1.7A2IovkL5.Pz1vLPPH8LFPSF1/W906m', 'client'),
+    ( 'victor.hugo@example.com', '$2y$10$LYuxyuYP/gIm.sKOY0niDuBEqw5SgQRUZKM8BFPdm/0t2PSRufTpi', 'client'),
+    ( 'camille.legrand@example.com', '$2y$10$ovSHicb4LP6MV7Fz6bLc7OttxuMlEdqqzmd/TbyIUE59VtozZo5KK', 'photographe'),
+    ( 'camille.legrand@example.com', '$2y$10$cd9aLmJKySLGlJg6dPc0/.DrN0tPIrjKZZekGwx3FSftc8fPKKDwu', 'photographe'),
+    ( 'emma.lefebvre@example.com', '$2y$10$wZOsqgbOCortMFcdVA6C/OcpwJHWpUkKUy32sNFdhWbMybkfDVWi6', 'photographe'),
+    ( 'sophie.bernard@example.com', '$2y$10$PBqioW4CCjm5AFgmzkSZDuP1cEXlnFaaF55r8W0uqHnFWcW.Q5HJi', 'photographe'),
+    ( 'victor.garnier@example.com', '$2y$10$G9fBeEwNA9Vqp5ObeNsr3eBkp7suhislic9A3hCOz.VMlYP8xbQF6', 'photographe'),
+    ( 'julie.martin@example.com', '$2y$10$BaKfHw.2TBB/4Tw/sUN47eQ8hd/b5t83DteonysGweHBkp78qRr/q', 'photographe'),
+    ( 'paul.richard@example.com', '$2y$10$XMUpkd0qdhpPK9IuBD8FjulcpONKBRw7dyWarq.DW8f9gS28zrf2.', 'photographe'),
+    ( 'alice.durand@example.com', '$2y$10$DMCwt6lboSUx.CB4nZ3S5OrtN8dKAhs.8H503lbFP1rOXCgRBBZa6', 'photographe'),
+    ( 'marie.faure@example.com', '$2y$10$nvOmiBNAUP9VNVkillyv.OlsxaMI6ghg/.jCPSvLvz2HFjmj2eYWG', 'photographe'),
+    ( 'jean.blanc@example.com', '$2y$10$26.bJDjYNa7uJLRfRRt2FebQO8Qnkf2sJWBHdv8aHUzwrwQvswICe', 'photographe');
 
--- Peuplement de la table Effectué sera fera directement grace au clés des table de références
+
+-- Peuplement de la table Effectue
+INSERT INTO Effectue (id_photographe, id_seance) VALUES
+                                                     (1, 1),  -- Photographe Camille Legrand, Séance 1
+                                                     (2, 2),  -- Photographe Lucas Morel, Séance 2
+                                                     (3, 3),  -- Photographe Emma Lefebvre, Séance 3
+                                                     (4, 4),  -- Photographe Sophie Bernard, Séance 4
+                                                     (5, 5),  -- Photographe Victor Garnier, Séance 5
+                                                     (6, 6),  -- Photographe Julie Martin, Séance 6
+                                                     (7, 7),  -- Photographe Paul Richard, Séance 7
+                                                     (8, 8),  -- Photographe Alice Durand, Séance 8
+                                                     (9, 9),  -- Photographe Marie Faure, Séance 9
+                                                     (10, 10); -- Photographe Jean Blanc, Séance 10
