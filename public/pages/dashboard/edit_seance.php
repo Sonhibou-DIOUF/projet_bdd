@@ -5,31 +5,62 @@ include "../../login/connexion_bdd.php"; // Connexion à la base de données
 if (isset($_GET['id'])) {
     $id_seance = $_GET['id'];
 
-    // Récupérer les informations de la séance
-    $sql = "SELECT * FROM Seance WHERE id_seance = '$id_seance'";
-    $result = mysqli_query($conn, $sql);
-    $seance = mysqli_fetch_assoc($result);
-
-    // Vérifier si la séance existe
-    if (!$seance) {
-        echo "<script>alert('Séance non trouvée.'); window.location.href = 'seances.php';</script>";
+    // Sécuriser l'ID de la séance (validation numérique)
+    if (!is_numeric($id_seance)) {
+        echo "<script>alert('ID de séance invalide.'); window.location.href = 'seances.php';</script>";
         exit();
+    }
+
+    // Récupérer les informations de la séance avec une requête préparée
+    $sql = "SELECT * FROM Seance WHERE id_seance = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    if ($stmt) {
+        // Lier l'ID de la séance au paramètre de la requête
+        mysqli_stmt_bind_param($stmt, "i", $id_seance);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $seance = mysqli_fetch_assoc($result);
+
+        // Vérifier si la séance existe
+        if (!$seance) {
+            echo "<script>alert('Séance non trouvée.'); window.location.href = 'seances.php';</script>";
+            exit();
+        }
+        mysqli_stmt_close($stmt); // Fermer la requête préparée
     }
 
     // Traitement de la mise à jour de la séance
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Récupérer les données du formulaire
+        // Récupérer et valider les données du formulaire
         $date_seance = $_POST['date_seance'];
         $heure = $_POST['heure'];
         $lieu = $_POST['lieu'];
 
-        // Requête SQL pour mettre à jour la séance
-        $update_sql = "UPDATE Seance SET date_seance = '$date_seance', heure = '$heure', lieu = '$lieu' WHERE id_seance = '$id_seance'";
-        if (mysqli_query($conn, $update_sql)) {
-            // Alerte de succès et redirection
-            echo "<script>alert('Séance mise à jour avec succès.'); window.location.href = 'seances.php';</script>";
+        // Validation simple pour la date et l'heure
+        if (empty($date_seance) || empty($heure) || empty($lieu)) {
+            echo "<script>alert('Tous les champs sont obligatoires.');</script>";
+            exit();
+        }
+
+        // Requête SQL pour mettre à jour la séance avec des requêtes préparées
+        $update_sql = "UPDATE Seance SET date_seance = ?, heure = ?, lieu = ? WHERE id_seance = ?";
+        $stmt_update = mysqli_prepare($conn, $update_sql);
+
+        if ($stmt_update) {
+            // Lier les paramètres à la requête préparée
+            mysqli_stmt_bind_param($stmt_update, "sssi", $date_seance, $heure, $lieu, $id_seance);
+
+            // Exécuter la mise à jour
+            if (mysqli_stmt_execute($stmt_update)) {
+                // Alerte de succès et redirection
+                echo "<script>alert('Séance mise à jour avec succès.'); window.location.href = 'seances.php';</script>";
+            } else {
+                // Alerte d'erreur
+                echo "<script>alert('Erreur lors de la mise à jour de la séance.');</script>";
+            }
+
+            mysqli_stmt_close($stmt_update); // Fermer la requête préparée
         } else {
-            // Alerte d'erreur
             echo "<script>alert('Erreur lors de la mise à jour de la séance.');</script>";
         }
     }
@@ -42,6 +73,7 @@ if (isset($_GET['id'])) {
 // Fermer la connexion à la base de données
 mysqli_close($conn);
 ?>
+
 
 <?php
 include "../../composants/header.php"; // Inclusion de l'en-tête

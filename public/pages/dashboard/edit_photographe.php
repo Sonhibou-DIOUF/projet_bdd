@@ -5,14 +5,30 @@ include "../../login/connexion_bdd.php"; // Connexion à la base de données
 if (isset($_GET['id'])) {
     $id_photographe = $_GET['id'];
 
-    // Récupérez les informations actuelles du photographe
-    $sql = "SELECT * FROM Photographe WHERE id_photographe = '$id_photographe'";
-    $result = mysqli_query($conn, $sql);
-    $photographe = mysqli_fetch_assoc($result);
+    // Récupérez les informations actuelles du photographe avec une requête préparée
+    $sql = "SELECT * FROM Photographe WHERE id_photographe = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    if ($stmt) {
+        // Lier l'ID du photographe en paramètre
+        mysqli_stmt_bind_param($stmt, "i", $id_photographe);
 
-    // Vérifiez si le photographe existe
-    if (!$photographe) {
-        echo "<script>alert('Photographe introuvable.'); window.location.href = 'photographes.php';</script>";
+        // Exécution de la requête
+        mysqli_stmt_execute($stmt);
+
+        // Récupérer le résultat
+        $result = mysqli_stmt_get_result($stmt);
+        $photographe = mysqli_fetch_assoc($result);
+
+        // Vérifiez si le photographe existe
+        if (!$photographe) {
+            echo "<script>alert('Photographe introuvable.'); window.location.href = 'photographes.php';</script>";
+            exit();
+        }
+
+        // Fermer la requête préparée
+        mysqli_stmt_close($stmt);
+    } else {
+        echo "<script>alert('Erreur de connexion à la base de données.'); window.location.href = 'photographes.php';</script>";
         exit();
     }
 } else {
@@ -30,31 +46,60 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $mot_de_passe = $_POST['mot_de_passe'];
 
-    // Mise à jour des informations dans la table Photographe
+    // Mise à jour des informations dans la table Photographe avec une requête préparée
     $sql_update_photographe = "UPDATE Photographe 
-                               SET nom = '$nom', specialite = '$specialite', telephone = '$telephone', email = '$email' 
-                               WHERE id_photographe = '$id_photographe'";
+                               SET nom = ?, specialite = ?, telephone = ?, email = ? 
+                               WHERE id_photographe = ?";
+    $stmt_update_photographe = mysqli_prepare($conn, $sql_update_photographe);
+    if ($stmt_update_photographe) {
+        // Lier les paramètres à la requête préparée
+        mysqli_stmt_bind_param($stmt_update_photographe, "ssssi", $nom, $specialite, $telephone, $email, $id_photographe);
 
-    // Exécuter la requête SQL pour la mise à jour des informations
-    if (mysqli_query($conn, $sql_update_photographe)) {
-        // Mise à jour du mot de passe dans la table Utilisateurs, si fourni
-        if (!empty($mot_de_passe)) {
-            $sql_update_utilisateur = "UPDATE utilisateurs 
-                                       SET mot_de_passe = '$mot_de_passe' 
-                                       WHERE email = '$email'";
-            mysqli_query($conn, $sql_update_utilisateur);
+        // Exécuter la mise à jour
+        $update_result = mysqli_stmt_execute($stmt_update_photographe);
+
+        // Si la mise à jour du photographe réussie
+        if ($update_result) {
+            // Mise à jour du mot de passe dans la table Utilisateurs si un nouveau mot de passe est fourni
+            if (!empty($mot_de_passe)) {
+                // Hashage du mot de passe avant de le stocker
+                $hashed_password = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+
+                // Mise à jour du mot de passe dans la table Utilisateurs
+                $sql_update_utilisateur = "UPDATE utilisateurs 
+                                           SET mot_de_passe = ? 
+                                           WHERE email = ?";
+                $stmt_update_utilisateur = mysqli_prepare($conn, $sql_update_utilisateur);
+                if ($stmt_update_utilisateur) {
+                    // Lier les paramètres
+                    mysqli_stmt_bind_param($stmt_update_utilisateur, "ss", $hashed_password, $email);
+
+                    // Exécuter la mise à jour du mot de passe
+                    mysqli_stmt_execute($stmt_update_utilisateur);
+
+                    // Fermer la requête préparée
+                    mysqli_stmt_close($stmt_update_utilisateur);
+                }
+            }
+
+            // Afficher une alerte de succès et rediriger vers le tableau de bord des photographes
+            echo "<script>alert('Photographe mis à jour avec succès.'); window.location.href = 'dashboard_photographes.php';</script>";
+        } else {
+            // Afficher une alerte d'erreur en cas d'échec de la mise à jour
+            echo "<script>alert('Erreur lors de la mise à jour du photographe.');</script>";
         }
-        // Afficher une alerte de succès et rediriger vers le tableau de bord des photographes
-        echo "<script>alert('Photographe mis à jour avec succès.'); window.location.href = 'dashboard_photographes.php';</script>";
+
+        // Fermer la requête préparée
+        mysqli_stmt_close($stmt_update_photographe);
     } else {
-        // Afficher une alerte d'erreur en cas d'échec de la mise à jour
-        echo "<script>alert('Erreur lors de la mise à jour du photographe.');</script>";
+        echo "<script>alert('Erreur de mise à jour des informations du photographe.');</script>";
     }
 }
 
 // Fermer la connexion à la base de données
 mysqli_close($conn);
 ?>
+
 
 <?php
 include "../../composants/header.php"; // Inclusion de l'en-tête
