@@ -93,7 +93,8 @@ INSERT INTO Utilisateurs (email, mot_de_passe, role) VALUES
     ( 'paul.richard@example.com', '$2y$10$XMUpkd0qdhpPK9IuBD8FjulcpONKBRw7dyWarq.DW8f9gS28zrf2.', 'photographe'),
     ( 'alice.durand@example.com', '$2y$10$DMCwt6lboSUx.CB4nZ3S5OrtN8dKAhs.8H503lbFP1rOXCgRBBZa6', 'photographe'),
     ( 'marie.faure@example.com', '$2y$10$nvOmiBNAUP9VNVkillyv.OlsxaMI6ghg/.jCPSvLvz2HFjmj2eYWG', 'photographe'),
-    ( 'jean.blanc@example.com', '$2y$10$26.bJDjYNa7uJLRfRRt2FebQO8Qnkf2sJWBHdv8aHUzwrwQvswICe', 'photographe');
+    ( 'jean.blanc@example.com', '$2y$10$26.bJDjYNa7uJLRfRRt2FebQO8Qnkf2sJWBHdv8aHUzwrwQvswICe', 'photographe'),
+    ( 'admin@example.com', '$2y$10$WhCE.0yaZNkY0XSClsn3/e/4na3pKpveO/yUmIIIsbXtvU2WmcUyu', 'admin');
 
 
 -- Peuplement de la table Effectue
