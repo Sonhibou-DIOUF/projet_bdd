@@ -85,7 +85,7 @@ INSERT INTO Utilisateurs (email, mot_de_passe, role) VALUES
     ( 'sophie.lambert@example.com', '$2y$10$K9hSMnCWoes5Z7ftOsUX1.7A2IovkL5.Pz1vLPPH8LFPSF1/W906m', 'client'),
     ( 'victor.hugo@example.com', '$2y$10$LYuxyuYP/gIm.sKOY0niDuBEqw5SgQRUZKM8BFPdm/0t2PSRufTpi', 'client'),
     ( 'camille.legrand@example.com', '$2y$10$ovSHicb4LP6MV7Fz6bLc7OttxuMlEdqqzmd/TbyIUE59VtozZo5KK', 'photographe'),
-    ('lucas.morel@example.com', '$2y$10$pMoTNcfGz2v66PjUrWzG3emDNZsadnWBTZe8pKoj51RzVbjEcBxh.', 'photographe'),
+    ( 'camille.legrand@example.com', '$2y$10$cd9aLmJKySLGlJg6dPc0/.DrN0tPIrjKZZekGwx3FSftc8fPKKDwu', 'photographe'),
     ( 'emma.lefebvre@example.com', '$2y$10$wZOsqgbOCortMFcdVA6C/OcpwJHWpUkKUy32sNFdhWbMybkfDVWi6', 'photographe'),
     ( 'sophie.bernard@example.com', '$2y$10$PBqioW4CCjm5AFgmzkSZDuP1cEXlnFaaF55r8W0uqHnFWcW.Q5HJi', 'photographe'),
     ( 'victor.garnier@example.com', '$2y$10$G9fBeEwNA9Vqp5ObeNsr3eBkp7suhislic9A3hCOz.VMlYP8xbQF6', 'photographe'),

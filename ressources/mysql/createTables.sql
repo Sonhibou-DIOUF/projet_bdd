@@ -45,7 +45,7 @@ CREATE TABLE Transaction (
 
 CREATE TABLE Utilisateurs (
                               id_utilisateur INT PRIMARY KEY AUTO_INCREMENT,
-                              email VARCHAR(255) NOT NULL,
+                              email VARCHAR(255) NOT NULL UNIQUE,
                               mot_de_passe VARCHAR(255) NOT NULL,
                               role VARCHAR(100) NOT NULL DEFAULT("client")
 );
