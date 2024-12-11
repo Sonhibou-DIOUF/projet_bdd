@@ -61,7 +61,7 @@ include "../../composants/navbar.php"; // Inclusion de la barre de navigation
                 <div class="mb-3">
                     <label for="file" class="form-label">Changer l'image (laisser vide pour conserver l'actuelle) :</label>
                     <input type="file" id="file" name="file" class="form-control" accept="image/*">
-                    <small>Fichier actuel : <?php echo $photo['nom_fichier']; ?></small>
+                    <small>Fichier actuel : <?php echo $photo['chemin_fichier']; ?></small>
                 </div>
 
                 <!-- Champ pour la résolution -->

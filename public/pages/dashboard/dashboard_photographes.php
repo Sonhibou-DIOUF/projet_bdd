@@ -88,7 +88,7 @@ include "../../composants/alert.php"; // Inclusion des alertes
             <p><strong>Email :</strong> <?php echo htmlspecialchars($photographe['email']); ?></p>
             <p><strong>Téléphone :</strong> <?php echo htmlspecialchars($photographe['telephone']); ?></p>
             <div class="text-center">
-                <a href="edit_photographe.php?id=<?php echo $photographe['id_photographe']; ?>" class="btn btn-warning">Modifier Profil</a>
+                <a href="edit_photographe_by_photographe.php?id=<?php echo $photographe['id_photographe']; ?>" class="btn btn-warning">Modifier Profil</a>
             </div>
         </div>
     </div>

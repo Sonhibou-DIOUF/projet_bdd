@@ -1,62 +1,62 @@
 <?php
 include "../../login/connexion_bdd.php"; // Connexion à la base de données
 
-// Vérifiez si l'ID du client est passé en paramètre
+// Vérifiez si l'ID du photographe est passé en paramètre
 if (isset($_GET['id'])) {
-    $id_client = $_GET['id'];
-    // Requête préparée pour éviter les injections SQL
-    $sql = "SELECT * FROM Client WHERE id_client = ?";
-    $stmt = mysqli_prepare($conn, $sql);
+    $id_photographe = $_GET['id'];
 
+    // Récupérez les informations actuelles du photographe avec une requête préparée
+    $sql = "SELECT * FROM Photographe WHERE id_photographe = ?";
+    $stmt = mysqli_prepare($conn, $sql);
     if ($stmt) {
-        // Lier l'ID du client comme paramètre
-        mysqli_stmt_bind_param($stmt, "i", $id_client);
+        // Lier l'ID du photographe en paramètre
+        mysqli_stmt_bind_param($stmt, "i", $id_photographe);
+
         // Exécution de la requête
         mysqli_stmt_execute($stmt);
+
         // Récupérer le résultat
         $result = mysqli_stmt_get_result($stmt);
-        $client = mysqli_fetch_assoc($result);
-        // Vérifiez si le client existe
-        if (!$client) {
-            echo "<script>alert('Client introuvable.'); window.location.href = 'dashboard_clients.php';</script>";
+        $photographe = mysqli_fetch_assoc($result);
+
+        // Vérifiez si le photographe existe
+        if (!$photographe) {
+            echo "<script>alert('Photographe introuvable.'); window.location.href = 'dashboard_photographes.php';</script>";
             exit();
         }
+
         // Fermer la requête préparée
         mysqli_stmt_close($stmt);
     } else {
-        echo "<script>alert('Erreur de connexion à la base de données.'); window.location.href = 'dashboard_clients.php';</script>";
+        echo "<script>alert('Erreur de connexion à la base de données.'); window.location.href = 'dashboard_photographes.php';</script>";
         exit();
     }
-    echo "aa";
-}
-
-else {
-    //echo "Aucun photographe spécifié";
-    // Si aucun ID n'est passé, afficher une alerte et rediriger vers la page des clients
-    echo "<script>alert('Aucun client spécifié.'); window.location.href = 'dashboard_clients.php';</script>";
-//    exit();
+} else {
+    // Si aucun ID n'est passé, afficher une alerte et rediriger vers la page des photographes
+    echo "<script>alert('Aucun photographe spécifié.'); window.location.href = 'dashboard_photographes.php';</script>";
+    exit();
 }
 
 // Gestion de la soumission du formulaire de modification
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Récupération des données du formulaire
     $nom = $_POST['nom'];
-    $email = $_POST['email'];
+    $specialite = $_POST['specialite'];
     $telephone = $_POST['telephone'];
-    $adresse = $_POST['adresse'];
+    $email = $_POST['email'];
     $mot_de_passe = $_POST['mot_de_passe'];
 
     // Mise à jour des informations dans la table Photographe avec une requête préparée
-    $sql_update_client = "UPDATE Client 
-                               SET nom = ?, email = ?, telephone = ?, adresse = ? 
-                               WHERE id_client = ?";
-    $stmt_update_client = mysqli_prepare($conn, $sql_update_client);
-    if ($stmt_update_client) {
+    $sql_update_photographe = "UPDATE Photographe 
+                               SET nom = ?, specialite = ?, telephone = ?, email = ? 
+                               WHERE id_photographe = ?";
+    $stmt_update_photographe = mysqli_prepare($conn, $sql_update_photographe);
+    if ($stmt_update_photographe) {
         // Lier les paramètres à la requête préparée
-        mysqli_stmt_bind_param($stmt_update_client, "ssssi", $nom, $email, $telephone, $adresse, $id_client);
+        mysqli_stmt_bind_param($stmt_update_photographe, "ssssi", $nom, $specialite, $telephone, $email, $id_photographe);
 
         // Exécuter la mise à jour
-        $update_result = mysqli_stmt_execute($stmt_update_client);
+        $update_result = mysqli_stmt_execute($stmt_update_photographe);
 
         // Si la mise à jour du photographe réussie
         if ($update_result) {
@@ -83,24 +83,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             // Afficher une alerte de succès et rediriger vers le tableau de bord des photographes
-            echo "<script>alert('Client mis à jour avec succès.'); window.location.href = 'dashboard_clients.php';</script>";
+            echo "<script>alert('Photographe mis à jour avec succès.'); window.location.href = 'dashboard_photographes.php';</script>";
         } else {
             // Afficher une alerte d'erreur en cas d'échec de la mise à jour
-            echo "<script>alert('Erreur lors de la mise à jour du client.');</script>";
+            echo "<script>alert('Erreur lors de la mise à jour du photographe.');</script>";
         }
 
         // Fermer la requête préparée
-        mysqli_stmt_close($stmt_update_client);
+        mysqli_stmt_close($stmt_update_photographe);
     } else {
-        echo "<script>alert('Erreur de mise à jour des informations du client.');</script>";
+        echo "<script>alert('Erreur de mise à jour des informations du photographe.');</script>";
     }
 }
 
 // Fermer la connexion à la base de données
 mysqli_close($conn);
 ?>
-
-
 
 
 <?php
@@ -110,33 +108,33 @@ include "../../composants/navbar.php"; // Inclusion de la barre de navigation
 
 <!-- Main Content -->
 <div class="container">
-    <h1 class="mb-4">Modifier un Client</h1>
+    <h1 class="mb-4">Modifier un Photographe</h1>
     <div class="card">
-        <div class="card-header">Modifier les informations du client</div>
+        <div class="card-header">Modifier les informations du photographe</div>
         <div class="card-body">
-            <form action="edit_client_by_client.php?id=<?php echo $id_client; ?>" method="POST">
+            <form action="edit_photographe_by_photographe.php?id=<?php echo $id_photographe; ?>" method="post">
                 <!-- Champ pour le nom -->
                 <div class="mb-3">
                     <label for="nom" class="form-label">Nom</label>
-                    <input type="text" id="nom" name="nom" class="form-control" placeholder="Nom du client" value="<?php echo $client['nom']; ?>" required>
+                    <input type="text" id="nom" name="nom" class="form-control" placeholder="Nom du photographe" value="<?php echo $photographe['nom']; ?>" required>
                 </div>
 
                 <!-- Champ pour la spécialité -->
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="Email du client" value="<?php echo $client['email']; ?>" required>
+                    <label for="specialite" class="form-label">Spécialité</label>
+                    <input type="text" id="specialite" name="specialite" class="form-control" placeholder="Spécialité du photographe" value="<?php echo $photographe['specialite']; ?>" required>
                 </div>
 
                 <!-- Champ pour le téléphone -->
                 <div class="mb-3">
                     <label for="telephone" class="form-label">Téléphone</label>
-                    <input type="tel" id="telephone" name="telephone" class="form-control" placeholder="Téléphone du client" value="<?php echo $client['telephone']; ?>" required>
+                    <input type="tel" id="telephone" name="telephone" class="form-control" placeholder="Téléphone du photographe" value="<?php echo $photographe['telephone']; ?>" required>
                 </div>
 
                 <!-- Champ pour l'email -->
                 <div class="mb-3">
-                    <label for="adresse" class="form-label">Adresse</label>
-                    <input type="text" id="adresse" name="adresse" class="form-control" placeholder="Adresse du client" value="<?php echo $client['adresse']; ?>" required>
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Email du photographe" value="<?php echo $photographe['email']; ?>" required>
                 </div>
 
                 <!-- Champ pour le mot de passe -->
@@ -148,7 +146,7 @@ include "../../composants/navbar.php"; // Inclusion de la barre de navigation
                 <!-- Boutons -->
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Mettre à jour</button>
-                    <a href="dashboard_clients.php" class="btn btn-secondary">Annuler</a>
+                    <a href="dashboard_photographes.php" class="btn btn-secondary">Annuler</a>
                 </div>
             </form>
         </div>

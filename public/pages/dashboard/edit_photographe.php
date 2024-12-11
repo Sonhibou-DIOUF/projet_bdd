@@ -1,118 +1,60 @@
 <?php
 include "../../login/connexion_bdd.php"; // Connexion à la base de données
 
-// Vérifiez si l'ID du photographe est passé en paramètre
+// Vérifiez si l'ID du client est passé en paramètre
 if (isset($_GET['id'])) {
     $id_photographe = $_GET['id'];
 
-    // Récupérez les informations actuelles du photographe avec une requête préparée
-    $sql = "SELECT * FROM Photographe WHERE id_photographe = ?";
-    $stmt = mysqli_prepare($conn, $sql);
-    if ($stmt) {
-        // Lier l'ID du photographe en paramètre
-        mysqli_stmt_bind_param($stmt, "i", $id_photographe);
+    // Récupérez les informations du client
+    $sql = "SELECT * FROM Photographe WHERE id_photographe = '$id_photographe'";
+    $result = mysqli_query($conn, $sql);
+    $photographe = mysqli_fetch_assoc($result);
 
-        // Exécution de la requête
-        mysqli_stmt_execute($stmt);
-
-        // Récupérer le résultat
-        $result = mysqli_stmt_get_result($stmt);
-        $photographe = mysqli_fetch_assoc($result);
-
-        // Vérifiez si le photographe existe
-        if (!$photographe) {
-            echo "<script>alert('Photographe introuvable.'); window.location.href = 'photographes.php';</script>";
-            exit();
-        }
-
-        // Fermer la requête préparée
-        mysqli_stmt_close($stmt);
-    } else {
-        echo "<script>alert('Erreur de connexion à la base de données.'); window.location.href = 'photographes.php';</script>";
+    if (!$photographe) {
+        echo "<script>alert('Photographe introuvable.'); window.location.href = 'photographes.php';</script>";
         exit();
     }
 } else {
-    // Si aucun ID n'est passé, afficher une alerte et rediriger vers la page des photographes
     echo "<script>alert('Aucun photographe spécifié.'); window.location.href = 'photographes.php';</script>";
     exit();
 }
 
-// Gestion de la soumission du formulaire de modification
+// Gestion de la soumission du formulaire pour la modification
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Récupération des données du formulaire
     $nom = $_POST['nom'];
     $specialite = $_POST['specialite'];
-    $telephone = $_POST['telephone'];
     $email = $_POST['email'];
-    $mot_de_passe = $_POST['mot_de_passe'];
+    $telephone = $_POST['telephone'];
 
-    // Mise à jour des informations dans la table Photographe avec une requête préparée
-    $sql_update_photographe = "UPDATE Photographe 
-                               SET nom = ?, specialite = ?, telephone = ?, email = ? 
-                               WHERE id_photographe = ?";
-    $stmt_update_photographe = mysqli_prepare($conn, $sql_update_photographe);
-    if ($stmt_update_photographe) {
-        // Lier les paramètres à la requête préparée
-        mysqli_stmt_bind_param($stmt_update_photographe, "ssssi", $nom, $specialite, $telephone, $email, $id_photographe);
 
-        // Exécuter la mise à jour
-        $update_result = mysqli_stmt_execute($stmt_update_photographe);
+    // Mise à jour des informations du client
+    $sql_update = "UPDATE Photographe 
+                   SET nom = '$nom', specialite = '$specialite', email = '$email', telephone = '$telephone' 
+                   WHERE id_photographe = '$id_photographe'";
 
-        // Si la mise à jour du photographe réussie
-        if ($update_result) {
-            // Mise à jour du mot de passe dans la table Utilisateurs si un nouveau mot de passe est fourni
-            if (!empty($mot_de_passe)) {
-                // Hashage du mot de passe avant de le stocker
-                $hashed_password = password_hash($mot_de_passe, PASSWORD_DEFAULT);
-
-                // Mise à jour du mot de passe dans la table Utilisateurs
-                $sql_update_utilisateur = "UPDATE utilisateurs 
-                                           SET mot_de_passe = ? 
-                                           WHERE email = ?";
-                $stmt_update_utilisateur = mysqli_prepare($conn, $sql_update_utilisateur);
-                if ($stmt_update_utilisateur) {
-                    // Lier les paramètres
-                    mysqli_stmt_bind_param($stmt_update_utilisateur, "ss", $hashed_password, $email);
-
-                    // Exécuter la mise à jour du mot de passe
-                    mysqli_stmt_execute($stmt_update_utilisateur);
-
-                    // Fermer la requête préparée
-                    mysqli_stmt_close($stmt_update_utilisateur);
-                }
-            }
-
-            // Afficher une alerte de succès et rediriger vers le tableau de bord des photographes
-            echo "<script>alert('Photographe mis à jour avec succès.'); window.location.href = 'dashboard_photographes.php';</script>";
-        } else {
-            // Afficher une alerte d'erreur en cas d'échec de la mise à jour
-            echo "<script>alert('Erreur lors de la mise à jour du photographe.');</script>";
-        }
-
-        // Fermer la requête préparée
-        mysqli_stmt_close($stmt_update_photographe);
+    if (mysqli_query($conn, $sql_update)) {
+        echo "<script>alert('Photographe mis à jour avec succès.'); window.location.href = 'photographes.php';</script>";
     } else {
-        echo "<script>alert('Erreur de mise à jour des informations du photographe.');</script>";
+        echo "<script>alert('Erreur lors de la mise à jour du client.'); window.location.href = 'edit_photographe.php$id_photographe';</script>";
     }
 }
 
-// Fermer la connexion à la base de données
 mysqli_close($conn);
 ?>
 
-
 <?php
 include "../../composants/header.php"; // Inclusion de l'en-tête
+include "../../composants/sidebar.php";
 include "../../composants/navbar.php"; // Inclusion de la barre de navigation
 ?>
 
 <!-- Main Content -->
-<div class="container">
+<div class="content">
     <h1 class="mb-4">Modifier un Photographe</h1>
     <div class="card">
         <div class="card-header">Modifier les informations du photographe</div>
         <div class="card-body">
-            <form action="edit_photographe.php?id=<?php echo $id_photographe; ?>" method="post">
+            <form action="photographes.php?id=<?php echo $id_photographe; ?>" method="post">
                 <!-- Champ pour le nom -->
                 <div class="mb-3">
                     <label for="nom" class="form-label">Nom</label>
@@ -146,7 +88,7 @@ include "../../composants/navbar.php"; // Inclusion de la barre de navigation
                 <!-- Boutons -->
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Mettre à jour</button>
-                    <a href="dashboard_photographes.php" class="btn btn-secondary">Annuler</a>
+                    <a href="photographes.php" class="btn btn-secondary">Annuler</a>
                 </div>
             </form>
         </div>
