@@ -1,7 +1,7 @@
 CREATE TABLE Client (
                         id_client INT PRIMARY KEY AUTO_INCREMENT,
                         nom VARCHAR(100) NOT NULL,
-                        email VARCHAR(100) NOT NULL,
+                        email VARCHAR(100) NOT NULL UNIQUE ,
                         telephone VARCHAR(15),
                         adresse TEXT
 );
@@ -10,7 +10,7 @@ CREATE TABLE Photographe (
                              id_photographe INT PRIMARY KEY AUTO_INCREMENT,
                              nom VARCHAR(100),
                              specialite VARCHAR(100),
-                             email VARCHAR(100),
+                             email VARCHAR(100) NOT NULL UNIQUE,
                              telephone VARCHAR(15)
 );
 
