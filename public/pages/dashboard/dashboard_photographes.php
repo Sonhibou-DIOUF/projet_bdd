@@ -1,5 +1,13 @@
 <?php
 include "../../login/connexion_bdd.php"; // Connexion à la base de données
+include "../../composants/header.php"; // Inclusion de l'en-tête
+include "../../composants/navbar.php"; // Inclusion de la barre de navigation
+include "../../composants/alert.php"; // Inclusion des alertes
+
+// Vérifier si la session est démarrée
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Vérifier si l'utilisateur est connecté en tant que photographe
 if (!isset($_SESSION['id_photographe'])) {
@@ -67,12 +75,6 @@ if ($stmt_photos) {
 } else {
     die("Erreur lors de la récupération des photos.");
 }
-?>
-
-<?php
-include "../../composants/header.php"; // Inclusion de l'en-tête
-include "../../composants/navbar.php"; // Inclusion de la barre de navigation
-include "../../composants/alert.php"; // Inclusion des alertes
 ?>
 
 <!-- Main Content -->
