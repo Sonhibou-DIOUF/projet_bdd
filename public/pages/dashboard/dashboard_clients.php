@@ -4,29 +4,37 @@ include "../../composants/header.php"; // Inclusion de l'en-tête
 include "../../composants/navbar.php"; // Inclusion de la barre de navigation
 include "../../composants/alert.php"; // Inclusion des alertes
 
+// Vérifier si la session est démarrée
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['id_client'])) {
-    header("Location: ../../login/loginPage.php"); // Rediriger si l'utilisateur n'est pas connecté
-    exit();
+    die("Erreur : Vous devez vous connecter pour accéder à cette page.");
 }
 
 $id_client = $_SESSION['id_client'];
 
 // Récupérer les informations de l'utilisateur
-$sql_utilisateur = "SELECT email FROM Utilisateurs WHERE id_utilisateur = ?";
+$sql_utilisateur = "SELECT id_utilisateur, email FROM Utilisateurs WHERE id_utilisateur = ?";
 $stmt_utilisateur = mysqli_prepare($conn, $sql_utilisateur);
 
 if ($stmt_utilisateur) {
     mysqli_stmt_bind_param($stmt_utilisateur, "i", $id_client);
     mysqli_stmt_execute($stmt_utilisateur);
     $result_utilisateurs = mysqli_stmt_get_result($stmt_utilisateur);
-    $utilisateurs = mysqli_fetch_assoc($result_utilisateurs);
+    if (mysqli_num_rows($result_utilisateurs) > 0) {
+        $utilisateurs = mysqli_fetch_assoc($result_utilisateurs);
+    } else {
+        die("Erreur : Utilisateur introuvable.");
+    }
     mysqli_stmt_close($stmt_utilisateur);
 } else {
     die("Erreur lors de la récupération des informations utilisateur.");
 }
 
-// Récupérer les informations du client
+// Vérifier si l'email existe dans la table Client
 $sql_client = "SELECT * FROM Client WHERE email = ?";
 $stmt_client = mysqli_prepare($conn, $sql_client);
 
@@ -34,7 +42,11 @@ if ($stmt_client) {
     mysqli_stmt_bind_param($stmt_client, "s", $utilisateurs['email']);
     mysqli_stmt_execute($stmt_client);
     $result_client = mysqli_stmt_get_result($stmt_client);
-    $client = mysqli_fetch_assoc($result_client);
+    if (mysqli_num_rows($result_client) > 0) {
+        $client = mysqli_fetch_assoc($result_client);
+    } else {
+        die("Erreur : Client introuvable.");
+    }
     mysqli_stmt_close($stmt_client);
 } else {
     die("Erreur lors de la récupération des informations client.");
@@ -80,12 +92,16 @@ if ($stmt_photos) {
     <div class="card mb-4">
         <div class="card-header">Informations du Client</div>
         <div class="card-body">
-            <p><strong>Nom :</strong> <?php echo htmlspecialchars($client['nom']); ?></p>
-            <p><strong>Email :</strong> <?php echo htmlspecialchars($client['email']); ?></p>
-            <p><strong>Téléphone :</strong> <?php echo htmlspecialchars($client['telephone']); ?></p>
-            <p><strong>Adresse :</strong> <?php echo htmlspecialchars($client['adresse']); ?></p>
+            <p><strong>Nom :</strong> <?php echo isset($client['nom']) ? htmlspecialchars($client['nom']) : "Non renseigné"; ?></p>
+            <p><strong>Email :</strong> <?php echo isset($client['email']) ? htmlspecialchars($client['email']) : "Non renseigné"; ?></p>
+            <p><strong>Téléphone :</strong> <?php echo isset($client['telephone']) ? htmlspecialchars($client['telephone']) : "Non renseigné"; ?></p>
+            <p><strong>Adresse :</strong> <?php echo isset($client['adresse']) ? htmlspecialchars($client['adresse']) : "Non renseigné"; ?></p>
             <div class="text-center">
-                <a href="edit_client_by_client.php?id=<?php echo $client['id_client']; ?>" class="btn btn-warning">Modifier Profil</a>
+                <?php if (isset($client['id_client'])): ?>
+                    <a href="edit_client_by_client.php?id=<?php echo htmlspecialchars($client['id_client']); ?>" class="btn btn-warning">Modifier Profil</a>
+                <?php else: ?>
+                    <p class="text-danger">Impossible de modifier le profil : ID client introuvable.</p>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -141,9 +157,6 @@ if ($stmt_photos) {
         </div>
     </div>
 </div>
-
-</body>
-</html>
 
 <?php
 // Fermer les requêtes préparées restantes
