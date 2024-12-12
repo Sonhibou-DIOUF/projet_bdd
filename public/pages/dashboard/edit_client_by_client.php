@@ -27,14 +27,10 @@ if (isset($_GET['id'])) {
         echo "<script>alert('Erreur de connexion à la base de données.'); window.location.href = 'dashboard_clients.php';</script>";
         exit();
     }
-    echo "aa";
-}
-
-else {
-    //echo "Aucun photographe spécifié";
+} else {
     // Si aucun ID n'est passé, afficher une alerte et rediriger vers la page des clients
     echo "<script>alert('Aucun client spécifié.'); window.location.href = 'dashboard_clients.php';</script>";
-//    exit();
+    exit();
 }
 
 // Gestion de la soumission du formulaire de modification
