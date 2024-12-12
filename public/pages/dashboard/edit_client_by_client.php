@@ -27,10 +27,11 @@ if (isset($_GET['id'])) {
         echo "<script>alert('Erreur de connexion à la base de données.'); window.location.href = 'dashboard_clients.php';</script>";
         exit();
     }
-} else {
+}
+
+else {
     // Si aucun ID n'est passé, afficher une alerte et rediriger vers la page des clients
     echo "<script>alert('Aucun client spécifié.'); window.location.href = 'dashboard_clients.php';</script>";
-    exit();
 }
 
 // Gestion de la soumission du formulaire de modification
@@ -42,7 +43,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $adresse = $_POST['adresse'];
     $mot_de_passe = $_POST['mot_de_passe'];
 
-    // Mise à jour des informations dans la table Photographe avec une requête préparée
+    // Vérification si l'email a été modifié
+    $email_modified = $email !== $client['email'];
+
+    // Mise à jour des informations dans la table Client avec une requête préparée
     $sql_update_client = "UPDATE Client 
                                SET nom = ?, email = ?, telephone = ?, adresse = ? 
                                WHERE id_client = ?";
@@ -54,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Exécuter la mise à jour
         $update_result = mysqli_stmt_execute($stmt_update_client);
 
-        // Si la mise à jour du photographe réussie
+        // Si la mise à jour du client réussie
         if ($update_result) {
             // Mise à jour du mot de passe dans la table Utilisateurs si un nouveau mot de passe est fourni
             if (!empty($mot_de_passe)) {
@@ -78,7 +82,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
 
-            // Afficher une alerte de succès et rediriger vers le tableau de bord des photographes
+            // Si l'email a été modifié, mettre à jour l'email dans la table Utilisateurs
+            if ($email_modified) {
+                $sql_update_email_utilisateur = "UPDATE Utilisateurs 
+                                                 SET email = ? 
+                                                 WHERE email = ?";
+                $stmt_update_email_utilisateur = mysqli_prepare($conn, $sql_update_email_utilisateur);
+                if ($stmt_update_email_utilisateur) {
+                    // Lier les paramètres
+                    mysqli_stmt_bind_param($stmt_update_email_utilisateur, "ss", $email, $client['email']);
+
+                    // Exécuter la mise à jour de l'email
+                    mysqli_stmt_execute($stmt_update_email_utilisateur);
+
+                    // Fermer la requête préparée
+                    mysqli_stmt_close($stmt_update_email_utilisateur);
+                }
+            }
+
+            // Afficher une alerte de succès et rediriger vers le tableau de bord des clients
             echo "<script>alert('Client mis à jour avec succès.'); window.location.href = 'dashboard_clients.php';</script>";
         } else {
             // Afficher une alerte d'erreur en cas d'échec de la mise à jour
@@ -95,9 +117,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Fermer la connexion à la base de données
 mysqli_close($conn);
 ?>
-
-
-
 
 <?php
 include "../../composants/header.php"; // Inclusion de l'en-tête
@@ -117,7 +136,7 @@ include "../../composants/navbar.php"; // Inclusion de la barre de navigation
                     <input type="text" id="nom" name="nom" class="form-control" placeholder="Nom du client" value="<?php echo $client['nom']; ?>" required>
                 </div>
 
-                <!-- Champ pour la spécialité -->
+                <!-- Champ pour l'email -->
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" id="email" name="email" class="form-control" placeholder="Email du client" value="<?php echo $client['email']; ?>" required>
@@ -129,7 +148,7 @@ include "../../composants/navbar.php"; // Inclusion de la barre de navigation
                     <input type="tel" id="telephone" name="telephone" class="form-control" placeholder="Téléphone du client" value="<?php echo $client['telephone']; ?>" required>
                 </div>
 
-                <!-- Champ pour l'email -->
+                <!-- Champ pour l'adresse -->
                 <div class="mb-3">
                     <label for="adresse" class="form-label">Adresse</label>
                     <input type="text" id="adresse" name="adresse" class="form-control" placeholder="Adresse du client" value="<?php echo $client['adresse']; ?>" required>
