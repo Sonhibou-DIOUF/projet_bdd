@@ -70,7 +70,7 @@ include "../../composants/navbar.php"; // Inclusion de la barre de navigation
     <div class="card">
         <div class="card-header">Modifier les informations du photographe</div>
         <div class="card-body">
-            <form action="edit_photographe.php" method="post">
+            <form action="edit_photographe.php?id=<?php echo $id_photographe; ?>" method="post">
                 <!-- Champ pour le nom -->
                 <div class="mb-3">
                     <label for="nom" class="form-label">Nom</label>
