@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                           WHERE id_client = '$id_client'";
 
     // Récupérer l'ID de l'utilisateur lié au client en fonction de l'email
-    $sql_get_id_utilisateur = "SELECT id_utilisateur FROM Utilisateur WHERE email = '$client[email]'";
+    $sql_get_id_utilisateur = "SELECT id_utilisateur FROM Utilisateurs WHERE email = '$client[email]'";
     $result_utilisateur = mysqli_query($conn, $sql_get_id_utilisateur);
     $utilisateur = mysqli_fetch_assoc($result_utilisateur);
 
@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id_utilisateur = $utilisateur['id_utilisateur'];
 
         // Mise à jour de l'email dans la table Utilisateur
-        $sql_update_utilisateur = "UPDATE Utilisateur 
+        $sql_update_utilisateur = "UPDATE Utilisateurs 
                                    SET email = '$email' 
                                    WHERE id_utilisateur = '$id_utilisateur'";
 
