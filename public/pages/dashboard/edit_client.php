@@ -26,20 +26,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $telephone = $_POST['telephone'];
     $adresse = $_POST['adresse'];
 
-    // Mise à jour des informations du client
-    $sql_update = "UPDATE Client 
-                   SET nom = '$nom', email = '$email', telephone = '$telephone', adresse = '$adresse' 
-                   WHERE id_client = '$id_client'";
+    // Mise à jour des informations du client dans la table Client
+    $sql_update_client = "UPDATE Client 
+                          SET nom = '$nom', email = '$email', telephone = '$telephone', adresse = '$adresse' 
+                          WHERE id_client = '$id_client'";
 
-    if (mysqli_query($conn, $sql_update)) {
-        echo "<script>alert('Client mis à jour avec succès.'); window.location.href = 'clients.php';</script>";
+    // Récupérer l'ID de l'utilisateur lié au client en fonction de l'email
+    $sql_get_id_utilisateur = "SELECT id_utilisateur FROM Utilisateur WHERE email = '$client[email]'";
+    $result_utilisateur = mysqli_query($conn, $sql_get_id_utilisateur);
+    $utilisateur = mysqli_fetch_assoc($result_utilisateur);
+
+    // Si l'utilisateur existe, mettez à jour l'email de l'utilisateur
+    if ($utilisateur) {
+        $id_utilisateur = $utilisateur['id_utilisateur'];
+
+        // Mise à jour de l'email dans la table Utilisateur
+        $sql_update_utilisateur = "UPDATE Utilisateur 
+                                   SET email = '$email' 
+                                   WHERE id_utilisateur = '$id_utilisateur'";
+
+        // Exécution de la mise à jour dans la base de données
+        if (mysqli_query($conn, $sql_update_client) && mysqli_query($conn, $sql_update_utilisateur)) {
+            echo "<script>alert('Client mis à jour avec succès.'); window.location.href = 'clients.php';</script>";
+        } else {
+            echo "<script>alert('Erreur lors de la mise à jour du client.'); window.location.href = 'edit_client.php?id=$id_client';</script>";
+        }
     } else {
-        echo "<script>alert('Erreur lors de la mise à jour du client.'); window.location.href = 'edit_client.php?id=$id_client';</script>";
+        echo "<script>alert('Utilisateur correspondant à l\'email du client introuvable.'); window.location.href = 'edit_client.php?id=$id_client';</script>";
     }
 }
 
 mysqli_close($conn);
 ?>
+
 
 <?php
 include "../../composants/header.php";
